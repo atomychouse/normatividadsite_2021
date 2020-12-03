@@ -1,0 +1,182 @@
+<div style="display: table;width:100%;height: 100%;" ng-controller="menuMaster">
+    <div style="display: table-row;">
+      <div id="mainmenu" style="display: table-cell;">
+        <div style="text-align: center;margin:20px 0px;">
+            <input type="file" id="logofile" style="display: none;">
+            <img src="/static/imgs/logo.png" ng-src="||logofile||" style="cursor: pointer;" ng-init="logofie='/static/imgs/logo.png'" width="65px" ng-click="chlogo();"/>
+        </div>
+            <div><a href="/?P=01">VER SITIO</a></div>
+        <br/><br/>
+        <ol class="sortable" id="mainlist">
+            <li  ng-repeat="s in secs" data-pk="||s.pk||"  
+                 data-parent="||s.pk||" data-columne="" data-type="sec" style="cursor:pointer;padding-top:10px;" > 
+                <div class="nombrele" ng-if="s.page_type!='bancoimagen'">
+                    <p class="lb mycol-8" style="padding-left:20px;">
+                    <a href="#" class="showsons" ng-if="chower(s);" style="width:10%;">
+                    <span class=" flechs lnr lnr-chevron-down" ng-click="chows($event,s,true);" ng-hide="s.shows"></span>
+                    <span class="flechs lnr lnr-chevron-up " ng-click="chows($event,s,false);" ng-show="s.shows"></span>
+                    </a>
+                    <span class="nombrele" ng-hide="s.editor" style="display:inline-block;width:80%;">
+                                           
+                        <a ng-if="otras(s);" 
+                        style="display:block;" href="#/" ng-click="chows($event,s,true);" ng-hide="s.shows">||s.sec_name|| </a>
+
+                        <a ng-if="otras(s);" 
+                        style="display:block;" href="#/" ng-click="chows($event,s,false);" ng-show="s.shows">||s.sec_name|| </a>
+
+
+                        <a ng-if="s.page_type=='bancoimagen'" ng-class="{activado:||s.opened||===true}" href="/admin/config/||s.pk||" style="padding-left:32px;">||s.sec_name|| </a>
+                        <a ng-if="s.ishome===true" href="/admin/config/||s.pk||">||s.sec_name|| </a>
+
+
+                    </span>
+                    <span ng-show="s.editor">
+                        <input type="text" name="sec_name" ng-model="s.sec_name"  ng-blur="saver($event,s);" />
+                        <a href="#killthis" ng-click="slaye_sec($event,this);"> x </a> 
+                    </span>
+                    </p>
+                    <p class="lb mycol-1" >
+                        <span class="lnr lnr-pencil edtbtn flechs" ng-click="changeOrEdit($event,s);"></span>
+                    </p>
+                </div>
+
+
+                <div class="nombrele" ng-if="s.page_type=='bancoimagen'" ng-class="{activado:||s.opened||===true}">
+                    <p class="lb mycol-8" style="padding-left:20px;">
+                    <a href="#" class="showsons" ng-if="chower(s);" style="width:10%;">
+                    <span class=" flechs lnr lnr-chevron-down" ng-click="chows($event,s,true);" ng-hide="s.shows"></span>
+                    <span class="flechs lnr lnr-chevron-up " ng-click="chows($event,s,false);" ng-show="s.shows"></span>
+                    </a>
+                    <span class="nombrele" ng-hide="s.editor" style="display:inline-block;width:80%;">
+                                           
+                        <a ng-if="otras(s);" 
+                        style="display:block;" href="#/" ng-click="chows($event,s,true);" ng-hide="s.shows">||s.sec_name|| </a>
+
+                        <a ng-if="otras(s);" 
+                        style="display:block;" href="#/" ng-click="chows($event,s,false);" ng-show="s.shows">||s.sec_name|| </a>
+
+
+                        <a  href="/admin/config/||s.pk||" style="padding-left:32px;">||s.sec_name|| </a>
+                        <a ng-if="s.ishome===true" href="/admin/config/||s.pk||">||s.sec_name|| </a>
+
+
+                    </span>
+                    <span ng-show="s.editor">
+                        <input type="text" name="sec_name" ng-model="s.sec_name"  ng-blur="saver($event,s);" />
+                        <a href="#killthis" ng-click="slaye_sec($event,this);"> x </a> 
+                    </span>
+                    </p>
+                    <p class="lb mycol-1" >
+                        <span class="lnr lnr-pencil edtbtn flechs" ng-click="changeOrEdit($event,s);"></span>
+                    </p>
+                </div>
+
+
+
+                <ol ng-if="s.page_type!='bancoimagen'" ng-class="{blind:||s.opened||===false}" data-sonsof='||s.pk||'>
+
+                    <li ng-repeat="c in s.cols"  data-pk="||c.cpk||" 
+                        data-parent="||s.pk||" data-columne="||c.pk||" data-type="col" style="cursor:pointer;padding-top: 10px;">
+                        <div >
+                        <p class="lb mycol-8" style="padding-left:40px;">
+                            <a href="#" class="showsons" >
+                            <span class="flechs lnr lnr-chevron-down" ng-click="chows($event,c,true);" ng-hide="c.shows"></span>
+                            <span class="flechs lnr lnr-chevron-up" ng-click="chows($event,c,false);" ng-show="c.shows"></span>
+                            </a>
+                           
+
+                            <span class="nombrele" ng-click="chows($event,c,true);" ng-hide="c.shows" ng-class="{blind:escondeme(c)}">||c.col_name||</span>
+                            <span class="nombrele" ng-click="chows($event,c,false);" ng-show="c.shows">||c.col_name||</span>
+
+
+                            <span ng-show="c.editor">
+                                <input type="text" name="col_name" ng-model="c.col_name"  ng-blur="saveCol($event,c);" /> 
+                                <a href="#killthis" ng-click="slaye_colum($event,this);"> x </a>
+                            </span>
+                        </p>
+                        <p class="lb mycol-1" style="cursor:pointer;cursor:">
+                            <span class="lnr lnr-pencil edtbtn flechs" ng-click="changeOrEdit($event,c);"></span>
+                        </p>
+                        </div>
+                        <ol ng-class="{blind:||c.opened||===false}" data-sonsofc="||c.cpk||">
+                            <li ng-repeat="sb in c.secs"  data-pk="||sb.pk||" 
+                                data-parent="||s.pk||" data-columne="||c.cpk||" data-type="sec" style="cursor: pointer;" ng-class="{activado:||sb.opened||===true}"  >
+                                <div class="nombrele">
+                                    <p class="lb mycol-8" style="padding-left: 60px;">
+                                    
+                                    <span class="nombrele"  ng-hide="sb.editor">
+                                        <a href="/admin/config/||sb.pk||/" class="insidelist">||sb.sec_name|| </a>
+                                    </span>
+                                    <span ng-show="sb.editor">
+                                        <input type="text" name="sec_name" ng-model="sb.sec_name" ng-blur="saver($event,sb);" />
+                                         <a href="#killthis" ng-click="slaye_subsec($event,this);"> x </a> 
+                                    </span>
+                                    </p>
+                                    <p class="lb mycol-1">
+                                        <span class="lnr lnr-pencil edtbtn flechs" ng-click="changeOrEdit($event,sb);"></span>
+                                    </p>
+                                </div>
+                            </li>
+                            <li  class="ui-state-disabled">
+                                <div>
+                                <p style="text-align: right;width:86%;">
+                                    <a href="#mas" 
+                                       ng-click="additem($event,c,s,'sb');">
+                                       +
+                                    </a>
+                                </p>
+                                </div>
+                            </li>
+
+                        </ol>
+                    </li>
+
+                    <li  class="ui-state-disabled" ng-class="{blind:||s.ishome||===true}">
+                        <div>
+                        <p style="text-align: right;width:86%;">
+                            <a href="#mas" 
+                               ng-click="additem($event,s,'','rows');">
+                                +
+                            </a>
+                        </p>
+                        </div>
+                    </li>
+                </ol>
+            </li>
+            <li class="ui-state-disabled">
+                <div> 
+                    <a href="#mas" ng-click="addSec($event,this);"> + </a>
+                 </div>
+            </li>
+        </ol> 
+
+           <div style="padding:10px 5%;" class="logouts">
+           
+            <h1 style="color:#fff;font-size:14px;"> {{request.user.first_name}} {{request.user.last_name|default:''}} </h1>
+            <a href="{% url 'sender' %}"><span class="glyphicon glyphicon-envelope"></span></a>
+
+            <a href="#addBanco" ng-click="addSecBanco($event,this);">
+               <span class="lnr lnr-camera"></span>
+            </a>
+            <a href="{% url 'users' %}">
+            <span class="lnr lnr-cog"></span>
+            </a>
+
+            <a href="/?logout=1"><span class="lnr lnr-exit"></span></a>
+                <a href="/admin/catscampains/" style="font-size: 11px;line-height: 2px;">CATEGORIAS</a>
+
+
+            </div>
+
+
+
+
+      </div>
+
+      <div style="display: table-cell;">
+      {% block content%}{% endblock %}          
+      </div>
+    </div>
+  
+</div>
+

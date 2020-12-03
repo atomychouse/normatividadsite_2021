@@ -1,0 +1,108 @@
+
+
+
+  <select name="columns" ng-model="item.columns"   style="color:#000;">
+    <option value="12">1</option>
+    <option value="6">2</option>
+    <option value="4">3</option>
+  </select>
+  <section style="padding:10px 2%;" class="siderow">
+    <div class="addy_box">
+      <a href="#agregar" id="masbox" class="vectorbtn" ng-click="addBox(this);$event.preventDefault();">
+        <span class="lnr lnr-plus-circle"></span>
+      </a>  
+    </div>
+    <div class="row siderow">
+      <div class="col-sm-||item.columns|| col-md-||item.columns|| varito" 
+           ng-repeat="box in item.nodeses" ng-init="item.columns=12" >
+        <div class="thumbnail" style="background-color:#333;text-align: center;">
+            <div class="ok_l_box" style="position:absolute;width:10% !important;">
+              <a href="#links" class="vectorbtn" ng-click="changeme(this);micro=true;">
+                <span class="lnr lnr-camera"></span>
+              </a>
+            </div>
+              <div class="ok_box">
+                <a href="#links"  ng-click="remove_imagenlarga($event,this);">
+                  <span class="lnr lnr-cross-circle"></span>
+                  
+                </a>  
+              </div>
+                
+
+              <div>
+                <a href="#" ng-click="box.flotando='right';box.invflotando='left';$event.preventDefault();"> < </a>
+                <a href="#" ng-click="box.flotando='left';box.invflotando='right';$event.preventDefault();"> > </a>
+              </div>
+              
+              <ul class="row">
+
+                <li style="width:||box.imagesize||%;text-align:left;float:||box.flotando||;" >
+                <div class="add_box">
+                  <a href="#" ng-click="box.imagesize=70;box.textsize=22;$event.preventDefault();">75%</a>
+                  <a href="#" ng-click="box.imagesize=48;box.textsize=48;$event.preventDefault();">50%</a>
+                  <a href="#" ng-click="box.imagesize=22;box.textsize=70;$event.preventDefault();">30%</a>
+                  <a href="#" ng-click="box.imagesize=12;box.textsize=83;$event.preventDefault();">15%</a>
+                </div>
+                    <img ng-show="vi" ng-src="||box.src||"  class="img-responsive changeme" />
+                    <img ng-hide="vi" ng-src="||box.prevy||" class="img-responsive" />
+                </li>
+                <li style="width:||box.textsize||%;float:||box.invflotando||;">
+                  
+                  <input type="text" ng-model="box.title" class="lightinput" placeholder="titulo" style="width:90%;" />
+                    <br/><br/>
+                    <textarea ng-model="box.texto" class="lightinput" placeholder="contenido" rows="15" style="width:90%;"></textarea>
+                  <div class="link_box_admin">
+
+                    
+
+            <div class="downloadmenu" ng-repeat='dl in box.downlink'>
+
+            <p><input type="text" class="lightinput" ng-model="dl.type_link" readonly="readonly" /></p>
+            <p><input type="text" class="lightinput" ng-model="dl.down_title" placeholder="titulo descarga" required="required" /></p>
+            <p><input type="text" class="lightinput" ng-model="dl.down_file" placeholder="archivo descarga" required="required"/></p>
+
+             <div class="addy_box">
+              <a href="#links" ng-click="remove_downloadlink($event,this,'grid');">
+                <span class="lnr lnr-cross-circle"></span>
+              </a>
+
+              <a href="#links" ng-click="save_downloadlink($event,this,'grid');">
+                <span class="lnr lnr-checkmark-circle"></span>
+              </a>
+              
+              <span style="color:#fff;">Enviar </span>
+                <input type="checkbox" name="sending" ng-model="dl.sending" ng-checked="true" ng-if="dl.sending=='true'">
+                <input type="checkbox" name="sending" ng-model="dl.sending" ng-checked="false" ng-if="dl.sending!='true'">                                                
+
+            </div>
+
+           
+            </div>
+
+
+                  </div>
+
+                </li>
+                <li style="clear:both;height:0px;"></li>
+            </ul>
+            <div class="ok_box">
+
+              <a href="#links" ng-click="addDownloadcolumn($event,this,'link');">
+                <span class="lnr lnr-link"></span>
+              </a>
+
+              <a href="#links" ng-click="addDownloadcolumn($event,this,'download');">
+                <span class="lnr lnr-download"></span>
+              </a>
+
+
+
+              <a href="#links" ng-click="save_link(this);micro=false;" >
+                <span class="lnr lnr-checkmark-circle"></span>
+              </a>
+            </div>
+      </div>
+    </div>
+    </div>
+  </section>
+

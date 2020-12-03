@@ -1,0 +1,16 @@
+<br>
+<div ng-repeat="box in item.nodeses">
+
+	<div>
+		<textarea ng-model="box.texto" class="lightinput" style="width:100%;height:335px;" ng-blur="save_richtext($event,this);"></textarea>
+	</div>
+
+
+    <div style="text-align: right;margin-top: 30px;">
+      <a href="#links" ng-click="save_richtext($event,this);micro=false;" class="ok_box_gris">
+      <img src="/static/imgs/check.png" />
+      </a>
+    </div>
+
+</div>
+

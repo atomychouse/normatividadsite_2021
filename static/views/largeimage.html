@@ -1,0 +1,34 @@
+    
+
+    <div class="row">
+      <div class="col-sm-12 col-md-12" ng-repeat="box in item.nodeses">
+
+      <div class="addy_box">
+        <a href="#clear" ng-click="remove_imagenlarga($event,this);">
+          <span class="lnr lnr-cross-circle"></span>
+        </a>
+      </div>
+
+
+      <div class="cropArea" ng-show="micro" style="position:absolute;left:12%;z-index: 101;">
+        <img-crop image="myImage" image="||box.src||" area-type="square" result-image-size="{w:1380,h:480}"  result-image="box.src"></img-crop>
+      </div>
+        <div class="thumbnail" style="text-align:center;">
+            <div class="ok_l_box" style="position:absolute;width:10% !important;z-index:102;">
+              <a href="#links" class="vectorbtn" ng-click="changeme(this);micro=true;">
+                <span class="lnr lnr-camera"></span>
+              </a>
+            </div>
+            <img ng-show="vi" ng-src="||box.src||"  class="img-thumbnail changeme" alt="doctor" />
+            <img ng-hide="vi" ng-src="||box.prevy||"  />
+            <input type="text" name="link_box" ng-model="box.title"  
+                   value="||box.title||"  placeholder="Titulo" 
+                   style="margin:0px auto;width:90%;border:0px;background-color:rgba(0,0,0,0.5);color:#fff;padding:2%;" />
+            <hr/>
+            <textarea ng-model="box.texto" style="margin:0px auto;width:90%;border:0px;background-color:rgba(0,0,0,0.5);color:#fff;padding:2%;"></textarea>
+            <div class="ok_box">
+              <a href="#links" ng-click="save_link(this);micro=false;"><span class="lnr lnr-checkmark-circle"></span></a>
+            </div>
+        </div>
+      </div>
+    </div>

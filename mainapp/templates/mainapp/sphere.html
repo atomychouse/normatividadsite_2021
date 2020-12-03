@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{MEDIA_URL}}css/photo-sphere-viewer.css">
+
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    #photosphere {
+      width: 100%;
+      height: 100%;
+    }
+
+    .psv-button.custom-button {
+      font-size: 22px;
+      line-height: 20px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}	
+	<div id='wrapSecondScreen'>
+	<!-- BEGIN REGISTRO -->
+	<div id='contenedorGame' class='clearfix'>
+		
+		<div class="contenedorLogo">
+			<img src="{{MEDIA_URL}}images/cinepolis-marvel-doctor-strange-logo.png" alt="">
+		</div>
+		<div id='inner'>
+			<!-- comienza PERSONAJES A REEMPLAZAR POR NIVEL -->
+			<div class='personajes'>
+				<img src="" alt="">
+			</div>
+			<!-- termina PERSONAJES A REEMPLAZAR POR NIVEL -->
+			<div class='center'>
+				<h1 id="descloc">Estás cerca de Central Park.</h1>				
+				<h1>Busca los 2 códigos flotantes a tu alrededor, ingrésalos en orden y oprime el botón azul.</h1>
+				<form id='gameForm' method='POST'>
+					<input type="hidden" name="pkloc" id="pkloc" />
+					<input type='text' name='codigo' id='codigo' placeholder='XXX-XXX' />
+					<a href="#" id="btngo"><span id='aceptar' class='static'></span></a>
+					<div id="wrapForm">
+						
+			{% for location in locations %}
+            <div class="place">
+              <p id="loc-{{location.pk}}">
+                {{location.name}}
+              </p>
+              {% if not forloop.last %}
+              <img src="{{MEDIA_URL}}images/cinepolis-marvel-doctor-strange-juego-arrow-static.png" alt="">
+              {% endif %}
+            </div>
+            {% endfor %}
+            
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{MEDIA_URL}}js/libraries/jquery.preload.min.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/jquery.cookie.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/jquery.inputmask.bundle.min.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/three.min.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/D.min.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/uevent.min.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/doT.min.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/renderers/CanvasRenderer.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/renderers/Projector.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/postprocessing/EffectComposer.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/postprocessing/RenderPass.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/postprocessing/ShaderPass.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/postprocessing/MaskPass.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/shaders/CopyShader.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/controls/DeviceOrientationControls.js"></script>
+<script src="{{MEDIA_URL}}js/libraries/photo-sphere-viewer.js"></script>
+
+<script type="text/javascript">
+
+  
+
+
+  
+  
+
+$(document).ready(function(){
+   PSV = new PhotoSphereViewer({
+    panorama: first.image,
+    container: 'photosphere',
+    navbar: false,
+    caption: 'CLAROVIDEO',
+    //longitude_range: [-7*Math.PI/8, 7*Math.PI/8],
+    //latitude_range: [-3*Math.PI/4, 3*Math.PI/4],
+    anim_speed: '-2rpm',
+    default_fov: 50,
+    fisheye: true,
+    move_speed: 1.1,
+    time_anim: 1000,
+    gyroscope: true,
+    webgl: true,
+    transition: {
+      duration: 1500,
+      loader: true,
+      blur: true
+    
+  });
+  	
+});
+
+
+</script>
+{% endblock%}

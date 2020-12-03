@@ -1,0 +1,29 @@
+
+<div class="col-xs-12 col-sm-12 col-md-12">
+	<div class="img-responsive" style="width:100%;height:550px;margin:auto;">
+	<div id="player" style="width:100%;height:100%;"></div>
+	</div>
+	<div style="position: relative;margin-top:50px;">
+	<div class="carouse-larrowl"><a href="#" class="prev"><i class="glyphicon glyphicon-chevron-left"></i></a></div>
+	
+	<div id="owl-example" class="owl-carousel" style="width:90%;margin: auto;">
+	{% for box in rw.vids %}
+	  <div class="row">
+	  	<div class="col-sm-5 col-md-5 varito">
+			<a href="#as" class="changevideo" data="{{box.videoid}}">
+			<img src="http://img.youtube.com/vi/{{box.videoid}}/0.jpg" class="img-responsive"  /></a>
+	  	</div>
+	  	<div class="col-sm-6 col-md-6" style="vertical-align: top;">
+	  		{{box.texto}}
+	  	</div>
+	  </div>
+	{%endfor%}  
+	</div>
+	<div class="carouse-larrow">
+	<a href="#" class="next">
+		<i class="glyphicon glyphicon-chevron-right"></i></a>
+	</div>
+	</div>
+
+</div>
+ 

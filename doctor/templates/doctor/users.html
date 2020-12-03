@@ -1,0 +1,91 @@
+{% extends "doctor/base.html" %}
+
+{% block extras%}
+<style type="text/css">
+	.row,label{
+		color:#fff !important;
+	}
+
+	#reg_box{
+		width:50%;margin:auto;
+	}
+
+	.helptext{
+		color:#999;
+	}
+
+
+
+</style>
+
+{% endblock%}
+
+{%block content%}
+
+<a href="/admon/user/">Agregar Usuario</a>
+
+<form name="userform" action="/admon/user/" method="post" id="userform"> 
+<input type="hidden" name="pk" >
+{% csrf_token %}
+	<div class="row">
+		<div class="col-md-12">
+			<ul>
+				{% for u in users %}
+				<li class="row">
+					<div class="col-md-1">
+						<a href="#edit" class="editor" data-user="{{u.pk}}"><span class="lnr lnr-pencil"></span></a> 
+					</div>
+					<div class="col-md-3">{{u.first_name}}</div>
+					<div class="col-md-3">{{u.email}}</div>
+					<div class="col-md-1"><a href="#delete" class="deleteuser" data-u="{{u.pk}}"><span class="lnr lnr-trash"></span></a> </div>
+				</li>
+				{% endfor %}
+				
+			</ul>
+		</div>
+	</div>
+
+</form>
+
+
+
+{%endblock%}
+
+
+
+
+{% block extrajs %}
+
+<script type="text/javascript">
+
+function deluser(e){
+	e.preventDefault();
+	removed = $(this).attr('data-u');
+	data = {'step':'4','pku':removed,'csrfmiddlewaretoken':'{{csrf_token}}'}
+	$.ajax({url:'/admon/remover/',
+			type:'POST',
+			data:data,
+			dataType:'json',
+			success:function(response){
+				console.log(response);
+			}
+		});
+	$(this).parents('li:first').remove();
+}
+
+	$(document).ready(function(){
+
+		$('.deleteuser').click(deluser);
+
+		$('.editor').click(function(e){
+			e.preventDefault();
+			valor = $(this).attr('data-user');
+			$('[name="pk"]').val(valor);
+			$('#userform').submit();
+
+		});
+
+	});
+</script>
+
+{% endblock%}

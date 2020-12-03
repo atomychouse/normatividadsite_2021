@@ -1,0 +1,67 @@
+  <select name="columns" ng-model="item.columns" ng-init="item.columns=6"  style="color:#000;display: none;">
+    <option value="6">2</option>
+    <option value="4">3</option>
+    <option value="3">4</option>
+    <option value="2">6</option>
+    <option value="1">12</option>
+  </select>
+
+  <section style="padding:10px 2%;">
+    <div class="add_box">
+      <a href="#agregar" id="masbox" class="vectorbtn" ng-click="addBox(this);$event.preventDefault();">
+        <span class="lnr lnr-plus-circle"></span>
+      </a>  
+    </div>
+    <div class="row">
+      <div class="col-sm-||item.columns|| col-md-||item.columns|| varito" ng-repeat="box in item.nodeses">
+        <div class="thumbnail" style="background-color:#333;text-align: center;">
+            <div class="ok_l_box" style="position:absolute;width:10% !important;">
+              <a href="#links" class="vectorbtn" ng-click="changemesmall(this);micro=true;">
+                <span class="lnr lnr-camera"></span>
+              </a>
+            </div>
+              <div class="ok_box">
+                <a href="#links"  ng-click="slayed_banco($event,this);">
+                  <span class="lnr lnr-cross-circle"></span>
+                </a>  
+              </div>
+              <div class="cropArea" ng-show="micro" style="position:absolute;left:12%;">  
+                <img-crop image="myImage" image="||box.src||" 
+                          area-type="square" result-image-size="{w:300,h:300}"  
+                          result-image="box.src"></img-crop>
+                          
+              </div>
+            <img ng-show="vi" ng-click="micro=false;" 
+                 ng-src="||box.src||"  
+                 class="img-thumbnail changeme img-responsive" 
+                 alt="doctor" width="100%" >
+            <img ng-hide="vi" ng-src="||box.prevy||"  width="100%"  />
+            <img ng-show="vix" ng-src="||box.original||"  width="100%"  />
+            
+            <div class="link_box_admin">
+
+            ||box.cats||
+              <select ng-model="box.mycats" multiple="multiple" class="lightinput" style="width:90%;height:250px;">
+                <optgroup label="||cat.cat||" ng-repeat="cat in cats">
+                  <option  ng-repeat="scat in cat.cats" ng-value="scat.catslug">||scat.catname||</option>
+                </optgroup>
+              </select>
+
+            </div>
+
+
+
+            <div class="link_box_admin">
+              <span style="color:#fff;">TEXTO Y LEGALES</span>
+              <textarea class="lightinput" ng-model='box.texto' style="width:90%;"></textarea>  
+            </div>
+
+
+            <div class="ok_box">
+              <a href="#links" ng-click="save_banco($event,this);micro=false;"><span class="lnr lnr-checkmark-circle"></span></a>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+

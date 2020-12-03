@@ -1,0 +1,8 @@
+{% for box in rw.medias %}
+    {% if box.title%}
+    <div>
+        <h2  class="red-txt bolding">{{box.title}}</h2>
+    </div>
+    {% endif %}
+  <div id="pk_{{box.pk}}" style="width:100%;height:450px;z-index:100;"></div>
+{% endfor %}

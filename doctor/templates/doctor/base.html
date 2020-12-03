@@ -1,0 +1,429 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Brand Manual</title>
+        <meta name="theme-color" content="#496201">        
+        <!-- core CSS -->
+        <link href="/static/css/clarofuentes.css" rel="stylesheet">
+        <link href="/static/css/bootstrap.css" rel="stylesheet">
+        <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/static/css/vfonts.css" rel="stylesheet">
+        <link href="/static/css/angular-ui-tree.css" rel="stylesheet">
+        <link href="/static/css/defaults.css" rel="stylesheet">
+        <link href="/static/css/doctor.css" rel="stylesheet">
+        <link href="/static/css/dropzone.css" rel="stylesheet">
+        <link href="/static/crop/croppic.css" rel="stylesheet">
+        <link href="/static/css/textAngular.css" rel="stylesheet">
+        <link href="/static/css/sweet-alert.css" rel="stylesheet">
+        <style type="text/css">
+
+            #cropimage{
+                    width:1380px;
+                    height:480px;
+                    position:relative; /* or fixed or absolute */
+                    background: #333;
+                }
+
+        </style>
+
+        {%block extras%}{%endblock%}
+        </head>
+    <body>
+    
+      <div id="toastrto">
+        <div class="lb indicator"><span class="lnr lnr-checkmark-circle"></span></div>
+        <div class="lb msg"></div>
+      </div>
+    
+
+ 
+    <div id="wrapper" ng-app='mainApp'>
+        <div class="overlay">MO</div>
+        <!-- Sidebar -->
+        
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation" ng-controller="treeCtr">
+        <h2><small>Welcome</small> {{request.user.first_name|default:request.user.email}}</h2>
+        <div><a href="/admon/users/">Users</a></div>
+        <div><a href="#" ng-click="addItem()">Seccíon Nueva</a></div>
+            <div>
+              <ol class="sortable">
+                <li ng-repeat="item in list" class="parent">
+                    <!-- SHOW/HIDE MENU-->                  
+                    <a href="#" ng-hide="mysons"  ng-click="mysons = true"> <span class="lnr lnr-chevron-down"></span> </a>
+                    <a href="#" ng-show="mysons" ng-click="mysons = false"> <span class="lnr lnr-chevron-up"></span></a>
+                    <!-- SECTION NAME -->
+                    <span ng-hide="editore" class="title_section">||item.title||</span>
+                   
+                    <input ng-show="editore" type="text" 
+                           ng-model="item.title"
+                           ng-blur="editando(this);editore=false;"
+                           name="sec_name" 
+                           focus-on-show />
+
+                    <a href="#ed" ng-hide="editore" ng-click="editore=true"><span class="lnr lnr-pencil"></span></a>
+                    <a href="/admon/config/||item.pk||/"><span class="lnr lnr-cog"></span></a>
+                
+
+                      <ol  ng-show="mysons">
+                        <li ng-repeat="sitem in item.nodes" class="sons">
+                            <!-- SHOW/HIDE MENU-->                  
+                            <a href="#" ng-hide="mysons"  ng-click="mysons = true"> <span class="lnr lnr-chevron-down"></span> </a>
+                            <a href="#" ng-show="mysons" ng-click="mysons = false"> <span class="lnr lnr-chevron-up"></span></a>
+                            <!-- SECTION NAME -->
+                            <span ng-hide="editore" class="title_section">||sitem.title||</span>
+                           
+                            <input ng-show="editore" type="text" 
+                                   ng-model="sitem.title"
+                                   ng-blur="editandoSon(this);editore=false;"
+                                   name="sec_name" 
+                                   focus-on-show />
+
+                            <a href="#ed" ng-hide="editore" ng-click="editore=true"><span class="lnr lnr-pencil"></span></a>
+                            <a href="/admon/config/||sitem.pk||/"><span class="lnr lnr-cog"></span></a>
+                              
+                              <ol  ng-show="mysons">
+                                <li ng-repeat="ssitem in sitem.nodes" class="gsons">
+                                    <!-- SECTION NAME -->
+                                    <span ng-hide="editore" class="title_section">||ssitem.title||</span>
+                                   
+                                    <input ng-show="editore" type="text" 
+                                           ng-model="ssitem.title"
+                                           ng-blur="editandoGon();editore=false;"
+                                           name="sec_name" 
+                                           focus-on-show />
+
+                                    <a href="#ed" ng-hide="editore" ng-click="editore=true"><span class="lnr lnr-pencil"></span></a>
+                                    <a href="/admon/config/||ssitem.pk||/"><span class="lnr lnr-cog"></span></a>
+                                </li>
+                              </ol>
+
+
+                        </li>
+                      </ol>
+
+                </li>
+
+              </ol>
+            </div>
+        </nav>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+          <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+            <span class="hamb-top"></span>
+            <span class="hamb-middle"></span>
+            <span class="hamb-bottom"></span>
+          </button>
+            <div class="container">
+            {% block content %}{% endblock %}
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+        <!--  JS  -->
+        <script src="/static/js/jquery.js"></script>
+        <script src="/static/js/jquery-ui.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/moment.js"></script>
+        <script src="/static/js/bootstrap-datetimepicker.min.js"></script>        
+        <script src="/static/js/chumbucket.js"></script>
+        <script src="/static/js/angular.min.js"></script>
+        <script src="/static/js/angular-route.min.js"></script>
+        <script src="/static/js/sortable.js"></script>
+        <script src="/static/js/ng-img-crop.js"></script>
+        <script src="/static/crop/croppic.js"></script>
+        <script src="/static/js/sweet-alert.min.js"></script>
+        <script src='/static/js/textangular/textAngular-rangy.min.js'></script>
+        <script src='/static/js/textangular/textAngular-sanitize.min.js'></script>
+        <script src='/static/js/textangular/textAngular.min.js'></script>
+        <script src="https://www.youtube.com/iframe_api"></script>
+        <script src='/static/js/youtube/angular-youtube-embed.min.js'></script>
+        <script type="text/javascript">
+            var myapp = angular.module('mainApp',['ngRoute',
+                                                  'ngImgCrop',
+                                                  'ui.sortable',
+                                                  'textAngular',
+                                                  'youtube-embed'
+                                                  ]);
+
+            var customInterpolationApp = angular.module('customInterpolationApp', []);
+            myapp.config(function($interpolateProvider) {
+                $interpolateProvider.startSymbol('||');
+                $interpolateProvider.endSymbol('||');
+            });
+
+            myapp.config(['$httpProvider', function($httpProvider) {
+                $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+                $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+                $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';        
+            }]);
+
+
+            myapp.directive('focusOnShow', function($timeout) {
+                return {
+                    restrict: 'A',
+                    link: function($scope, $element, $attr) {
+                        if ($attr.ngShow){
+                            $scope.$watch($attr.ngShow, function(newValue){
+                                if(newValue){
+                                    $timeout(function(){
+                                        $element[0].focus();
+                                    }, 0);
+                                }
+                            })      
+                        }
+                        if ($attr.ngHide){
+                            $scope.$watch($attr.ngHide, function(newValue){
+                                if(!newValue){
+                                    $timeout(function(){
+                                        $element[0].focus();
+                                    }, 0);
+                                }
+                            })      
+                        }
+
+                    }
+                };
+            });
+
+             try
+             {
+                myapp.controller('treeCtr',function($scope,$http){
+
+                  
+                $http.get("{% url 'section_list' %}").then(function(response){
+                    $scope.list = response.data;
+                });
+
+
+                $scope.editandoGon = function(){
+
+                    elem = this;
+
+
+                    data = {'pk':elem.ssitem.pk,
+                            'parent':elem.sitem.pk,
+                            'orden':elem.$index,
+                            'sec_name':elem.ssitem.title,
+                            'csrfmiddlewaretoken':'{{csrf_token}}'
+                        };
+                    uriz = "{% url 'addsection' %}";
+                    data = $.param(data);
+                    
+                        $http({url:uriz,method:'POST',data:data}).then(function(response){
+                              elem.ssitem.pk = response.data.datos.pk;
+                              toastr('success','Se Editó con éxito.');      
+                              
+                        });
+                    
+
+                }
+
+
+                $scope.editandoSon = function(elem){
+
+
+                    data = {'pk':elem.sitem.pk,
+                            'parent':elem.item.pk,
+                            'orden':elem.$index,
+                            'sec_name':elem.sitem.title,
+                            'csrfmiddlewaretoken':'{{csrf_token}}'
+                        };
+                    uriz = "{% url 'updatesection' %}";
+                    data = $.param(data);        
+                    $http({url:uriz,method:'POST',data:data}).then(function(response){
+                            
+                          elem.sitem.pk = response.data.datos.pk;
+                          toastr('success','Se Editó con éxito.');      
+                          
+                    });
+
+                }
+
+
+                  $scope.editando = function(elem){
+                    data = {'pk':elem.item.pk,
+                            'orden':elem.$index,
+                            'sec_name':elem.item.title,
+                            'csrfmiddlewaretoken':'{{csrf_token}}'
+                        };
+                    data = $.param(data);
+                    if(elem.item.pk>0)
+                      uriz = "{% url 'updatesection' %}";
+                    else
+                      uriz = "{% url 'addsection' %}";
+
+                    $http({url:uriz,method:'POST',data:data}).then(function(response){
+                        elem.item.pk = response.data.datos.pk;
+                          toastr('success','Se Editó con éxito.');      
+                          
+                    });
+
+                  }
+
+                   $scope.addItem = function(){
+                    $scope.list.push({'title':'Nombre','nodes':[]});
+
+
+                   }
+
+                   $scope.addson=function(ite){
+                    ite.nodes.push({'title':'Son of','nodes':[]});
+                    $scope.mysons = true;
+                   }
+
+                   $scope.reorder=function(){
+                        pks = [];
+                        orders = [];
+
+                        angular.forEach($scope.list,function(x){
+                            //console.log(x);
+                            dato = x.pk+'|'+x.orden;
+                            pks.push(dato);
+                        });
+
+
+                        data = {'pks':pks};
+                        //console.log(data);
+                        
+                        $http({url:"{% url 'addsection' %}",
+                               params:data,
+                               method:'GET'}).then(function(response){
+                        });
+                        
+
+
+                    }
+
+
+                 });
+
+
+              
+            }
+            catch(err){
+              console.log('No hay app');
+            }
+            
+
+        </script>
+
+
+        
+        <script type="text/javascript">
+            
+            $(document).ready(function () {
+
+                    $('.sendit').submit(sendit);
+
+
+                    jQuery( ".sortable" ).sortable({
+                        update: function( event, ui ) {
+                            papa = $(ui.item).parent('ol');
+
+                            jQuery(papa).find('.parent').each(function(ex){
+                                
+                                pigtar = angular.element($(this));
+                                orden = $(this).index();
+                                //console.log(pigtar);
+                                try{
+                                    pigtar.scope().item.orden = orden;
+                                    pigtar.scope().$apply();
+                                }
+                                catch(err){
+                                    console.log(err);
+                                }
+                            });
+                            pigtar.scope().reorder();
+                            pigtar.scope().$apply();                                    
+                            
+                        }
+                    });
+
+              var trigger = $('.hamburger'),
+                  overlay = $('.overlay'),
+                 isClosed = false;
+              var editmode = false;
+
+                trigger.click(function () {
+                  hamburger_cross();      
+                });
+
+                function hamburger_cross() {
+
+                  if (isClosed == true) {          
+                    overlay.hide();
+                    trigger.removeClass('is-open');
+                    trigger.addClass('is-closed');
+                    isClosed = false;
+                  } else {   
+                    overlay.show();
+                    trigger.removeClass('is-closed');
+                    trigger.addClass('is-open');
+                    isClosed = true;
+                  }
+              }
+              
+              $('[data-toggle="offcanvas"]').click(function () {
+                    $('#wrapper').toggleClass('toggled');
+              });
+
+
+
+
+            });            
+
+
+        </script>
+
+
+
+            <script type="text/javascript">
+            // CROPING IMAGES
+        var cropperOptions = {
+                          processInline:true,
+                          cropData:{
+                            "uid":'{{section.pk}}',
+                            "portal":'links',
+                            "tipo":'headimage',
+                            'csrfmiddlewaretoken':'{{csrf_token}}'
+                          },
+                          loaderHtml:'<i class="fa fa-spinner"></i>',
+                          //loadPicture:'/static/imgs/{{data.fotoprincipal}}',
+                          cropUrl:'/cropulec/',
+                          rotateControls:true,
+                          doubleZoomControls:true,
+                          imgEyecandy:true,
+                          imgEyecandyOpacity:0.2,
+                          outputUrlId:'salida',
+                          onAfterImgCrop:function(response){
+                            $('#id_fotoprincipal').val(response.url);
+                            //$('#principalpic img').remove();
+                          
+                          }
+                        };
+
+
+                $(document).ready(function(){
+                    $('.sendit').submit(sendit);
+                    var cropperHeader = new Croppic('cropimage',cropperOptions);
+                });
+            </script>
+        {% block extrajs %}{% endblock %}
+
+
+
+
+    </body>
+
+</html>

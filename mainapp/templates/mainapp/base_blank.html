@@ -1,0 +1,40 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="atomyc.site">
+        <title>Normatividad Claro</title>
+        <meta name="theme-color" content="#496201">
+        <!-- core CSS -->
+        <link href="/static/css/bootstrap.css" rel="stylesheet">
+        <link href="/static/css/clarofuentes.css" rel="stylesheet">
+        <link href="/static/css/vfonts.css" rel="stylesheet">
+        <link href="/static/css/doctor.css" rel="stylesheet">
+        <link href="/static/css/defaults.css" rel="stylesheet">
+        <link href="/static/css/demo.css" rel="stylesheet">
+        <link rel="stylesheet" href="/static/owl-carousel/owl.carousel.css">
+        <link rel="stylesheet" href="/static/owl-carousel/owl.theme.css">
+
+        {%block extras%}{%endblock%}
+        </head>
+    <body>
+      <div id="toastrto">
+        <div class="lb indicator"><span class="lnr lnr-checkmark-circle"></span></div>
+        <div class="lb msg"></div>
+      </div>
+
+        {% block cabecera %}{% endblock %}
+
+        {% block content %}{% endblock %}
+        <!--  JS  -->
+        <script src="/static/js/jquery.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/chumbucket.js"></script>
+        {% block extrajs %}{% endblock %}
+
+    </body>
+
+</html>

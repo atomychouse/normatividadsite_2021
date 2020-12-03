@@ -1,0 +1,34 @@
+
+
+
+
+<div class="blankbox" ng-repeat="box in item.nodeses">
+
+<table style="width:100%;">
+	<tr>
+		<td style="width:10%;vertical-align: middle;">
+		<input type="text" id="altura" class="form-control" ng-model='item.alto'>
+		</td>
+		<td style="width:5%;">px</td>
+		<td style="width:80%;">
+			<div  style="position:relative;margin:20px 1px;background-color:#b3b0b0;height:5px;width:100%;">
+			<div id="slidesr" style="background-color: #333;"></div>			
+		</td>
+	</tr>
+	
+</table>
+
+	
+
+	<div id="mostraraltura" style="background-color:#aaa;">&nbsp;</div>
+
+    <div style="text-align: right;margin-top: 30px;">
+      <a href="#links" ng-click="save_blank($event,this);micro=false;" class="ok_box_gris">
+      <img src="/static/imgs/check.png" />
+      </a>
+    </div>
+
+
+</div>
+
+

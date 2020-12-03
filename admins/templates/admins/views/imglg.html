@@ -1,0 +1,42 @@
+    <div class="row">
+      <div class="col-sm-12 col-md-12" ng-repeat="box in item.nodeses" style="margin-bottom: 40px;">
+      <br/><br>
+
+
+      <div style="text-align: right;position: relative;height: 0px;">
+        <a href="#links"  ng-click="slayed_imglg($event,this);" class="boton dgris">
+          x
+        </a>  
+      </div>
+      <div class="cropArea" ng-show="micro" style="position:absolute;left:12%;z-index: 101;">
+        <img-crop image="myImage" image="||box.src||" area-type="square" result-image-size="{w:1380,h:480}"  result-image="box.src"></img-crop>
+      </div>
+        <div class="" style="text-align:center;">
+            <div class="" style="position:absolute;width:10% !important;z-index:102;text-align: left;">
+              <a href="#links" class="boton red" ng-click="changeme(this);micro=true;">
+                <span class="lnr lnr-camera"></span>
+              </a>
+            </div>
+            <img ng-show="vi" ng-src="||box.src||" style="width:100%;" class=" changeme" alt="doctor" />
+            <img ng-hide="vi" ng-src="||box.prevy||" style="width:100%;" />
+            <input type="text" name="link_box" ng-model="box.title"   class="lightinput" 
+                   value="||box.title||"  placeholder="Titulo" style="width:100%;padding:2%;" ng-blur="save_link($event,this);micro=false;" />
+            
+            <textarea ng-model="box.texto" style="margin:0px;width:100%;padding:2%;" ng-blur="save_link($event,this);micro=false;"></textarea>        
+        </div>
+
+    <div style="text-align: right;margin-top: 30px;">
+      <a href="#links" ng-click="save_link($event,this);micro=false;" class="ok_box_gris">
+      <img src="/static/imgs/check.png" />
+      </a>
+       <a href="#agregar" id="masbox" ng-if="$last" class="ok_box_rojillo"  ng-click="addBox($event,this);micro=false;">
+              +
+            </a>  
+    </div>
+
+
+
+
+      </div>
+    </div>
+

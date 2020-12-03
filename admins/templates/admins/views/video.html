@@ -1,0 +1,54 @@
+
+<div class="" style="width:40%;height:40%;margin: auto;">
+  <youtube-video class="embed-responsive-item" id="videoplaying" video-id="theBestVideo"></youtube-video>
+</div>
+
+
+
+  <section style="padding:10px 2%;">
+    <div class="row">
+      <div class="col-sm-3 col-md-3 varito" ng-repeat="box in item.nodeses">
+        <div class="" style="text-align: center;">
+              <div class="ok_box">
+                <a href="#links"  ng-click="slayed_video($event,this);">
+                  <span> x </span>
+                </a>  
+              </div>
+              <div class="cropArea" ng-show="micro" style="position:absolute;left:12%;">
+                <img-crop image="myImage" image="||box.src||" area-type="square"  result-image="box.src"></img-crop>
+              </div>
+            <img ng-hide="vi" src="/static/imgs/defvideo.jpg" ng-src="http://img.youtube.com/vi/||box.video||/0.jpg"  width="100%" />
+            
+ 
+
+            <div class="link_box_admin">
+              <input type="text" name="associate_file" ng-model="box.video" placeholder="VIDEOKEY" style="width: 100%;" class="lightinput" ng-blur="addvideo($event,this);micro=false;"  />              
+            </div>            
+            <div class="link_box_admin">
+              <input type="text" name="link_box" ng-model="box.title" style="width: 100%;" class="lightinput" ng-blur="addvideo($event,this);micro=false;" />              
+            </div>
+
+
+
+
+            <div class="link_box_admin">
+              <textarea ng-model="box.texto" style="width: 100%;" rows="9" style="color:#333;">||box.texto||</textarea>              
+            </div>
+
+
+
+            <div style="text-align: right;margin-top: 30px;">
+              <a href="#links" ng-click="addvideo($event,this);micro=false;" class="ok_box_gris">
+              <img src="/static/imgs/check.png" />
+              </a>
+              <a href="#agregar" ng-if="$last" id="masbox" class="ok_box_rojillo" ng-click="addBox($event,this);">
+                    +
+              </a> 
+            </div>
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+

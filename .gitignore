@@ -1,0 +1,14 @@
+static/banco/
+static/campains_crops/
+static/campains_original/
+static/crop/
+static/descargas/
+static/downloadables/
+static/downlobles/
+static/externos/
+static/links/
+static/portadas/
+static/videos/
+static/media/
+*.pyc
+*.sqlite3

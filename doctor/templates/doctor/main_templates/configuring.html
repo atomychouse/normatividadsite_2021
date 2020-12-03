@@ -1,0 +1,1267 @@
+{% extends "doctor/base.html" %}
+
+{%block content%}
+
+<style type="text/css">
+  .add_box li{
+    margin: 1px 10px;
+  }
+
+</style>
+
+<input id="loader" name="imagen" type="file" style="display: none;">
+
+<div ng-controller="secAxCtr">
+  <h1 class="pleft">{% if section.parent%}{{section.parent}}>{% endif%} {{section.sec_name}}</h1>
+  <div class="add_box pright" >
+    <a href="#slayingall" data-toggle="tooltip" 
+       title="Elimina la seccion y todo su contenido de mdo permanente :O" 
+       ng-click="slayer_sec($event,'{{section.pk}}');"><span class="lnr lnr-trash"></span></a>
+  </div>
+  <div class="clearfix"></div>
+</div>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav menutool">
+        <li><h4>{{section.sec_name}}</h4></li>
+        <li><a href="#configurador">Configurar <span class="sr-only">(current)</span></a></li>
+        <li><a href="#mainbox_home">Contenido</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+
+<div id="dropping" style="background-color: #fff;width:100%;height: auto;">
+<h1>Archivos</h1>
+<form action="{% url 'addfile' %}"
+      class="dropzone"
+      id="my-awesome-dropzone" style="height:100%;">
+      <p class="dz-message">Agregar Archivos aquí</p>
+      {% csrf_token %}
+      <div class="dz-filename"><span data-dz-name></span></div>
+
+      <input type="hidden" name="secpk" value="{{section.pk}}" />
+      </form>
+</div>
+
+
+
+<section id="configurador" ng-controller="insideCtr"  class="nava" style="display: none;">
+
+  {% include 'doctor/categorias.html' %}
+
+</section>
+
+
+<section id="mainbox_home" ng-controller="configCtr" class="nava" >
+
+<div class="add_box">
+<a href="/admon/config/{{section.pk}}/?type=bancoimagen">Banco de Imagenes</a>
+<a href="/admon/config/{{section.pk}}/?type=intern">Normal</a>
+
+</div>
+
+{% ifequal section.page_type 'bancoimagen' %}
+
+{% include 'doctor/bancoimagen.html'%}
+{% else %}
+{% include 'doctor/contenido.html'%}
+{% endifequal %}
+</section>
+
+
+
+<script id="imglg" type="text/ng-template">
+  <ng-include src="'/static/views/largeimage.html'"></ng-include>
+</script>
+
+
+<script id="video" type="text/ng-template">
+  <ng-include src="'/static/views/video.html'"></ng-include>
+</script>
+
+
+<script id="blankrow" type="text/ng-template">
+  <ng-include src="'/static/views/blankrow.html'"></ng-include>
+</script>
+
+<script id="gridImg" type="text/ng-template">
+    <ng-include src="'/static/views/grid.html'"></ng-include>
+</script>
+
+<script id="gridLink" type="text/ng-template">
+    <ng-include src="'/static/views/gridlink.html'"></ng-include>
+</script>
+
+<script id="sideimg" type="text/ng-template">
+    <ng-include src="'/static/views/sideimg.html'"></ng-include>
+</script>
+
+<script id="richtext" type="text/ng-template">
+    <ng-include src="'/static/views/richtext.html'"></ng-include>
+</script>
+
+
+<script id="gridbanco" type="text/ng-template">
+    <ng-include src="'/static/views/gridbanco.html'"></ng-include>
+</script>
+
+<script id="easysideimg" type="text/ng-template">
+    <ng-include src="'/static/views/easysideimg.html'"></ng-include>
+</script>
+
+<script id="htmltext" type="text/ng-template">
+    <ng-include src="'/static/views/htmltext.html'"></ng-include>
+</script>
+
+
+<script id="spherenav" type="text/ng-template">
+    <ng-include src="'/static/views/spherenav.html'"></ng-include>
+</script>
+
+
+
+{%endblock%}
+
+{% block extrajs%}
+<script src="/static/js/dropzone.js"></script>
+<script src="/static/js/configsectionctr.js"></script>
+<script type="text/javascript">
+
+var links = [];
+{% for l in ligas %}
+    links.push({pk:'{{l.pk}}',
+                'src':'/{{l.src}}',
+                'prevy':'/{{l.src}}',
+                'link':'{{l.link}}',
+    'columnax':'3',
+    });
+{% endfor %}
+
+var cats = [];
+
+{% for c in cats %}
+  
+  subcats = [];
+  {% for sc in c.cat_set.all %}
+    subcats.push({
+        catname:'{{sc.catname}}',
+        pk:'{{sc.pk}}',
+        catslug:'{{sc.catslug}}'
+    });
+  {% endfor %}
+
+  cats.push({cat:'{{c.catname}}',pk:'{{c.pk}}',cats:subcats});
+{% endfor %}
+
+
+myapp.controller('configCtr',function($scope,$http){
+
+    $scope.rowsSec = [];
+    $scope.boxes = links;
+    $scope.genralmodule='imglg';
+    $scope.theBestVideo = '';
+    $scope.newvideo = '';
+    $scope.cats = cats;
+
+  {% for r in section.rowsection_set.all %}
+
+      medias = [];
+
+      {% for img in r.mediasection_set.all %}
+          texto ='{{img.cleantxt|safe}}';
+          downlink = [];        
+      
+          {% for x in img.downloadsl %}
+            downlink.push({'down_title':'{{x.down_title}}',
+                            'down_file':'{{x.down_file}}',
+                            'pk':'{{x.id}}',
+                            'boxpk':'{{x.boxpk}}',
+                            'type_link':'{{x.type_link}}',
+                            'sending':'{{x.sending|lower}}'
+                          });
+          {% endfor %}
+          
+          
+          medias.push({
+            {% if img.associate_file %}
+            
+            'associate_file':'{{img.associate_file}}',
+            {% endif%}
+
+            'pk':'{{img.pk}}',
+            'title':'{{img.title}}',
+            'downlink':downlink,
+            'columns':'{{r.configur}}',
+            'texto':texto,
+            'prevy':'/{{img.webimage}}',
+            'imagesize':'{{img.dictconfigs.0.imagesize}}',
+            'flotando':'{{img.dictconfigs.0.flotando}}',
+            'invflotando':'{{img.dictconfigs.0.invflotando}}',
+            'textsize':'{{img.dictconfigs.0.textsize}}'
+          });
+
+      {% endfor %}
+
+
+      {% for img in r.bancoimg_set.all %}
+          mycats = [];
+          {% for x in img.mycats%}
+            mycats.push('{{x}}');
+          {% endfor %}
+
+          medias.push({
+            'pk':'{{img.pk}}',            
+            'mycats':mycats,
+            'prevy':'/{{img.smallimage}}',
+            'original':'/{{img.webimage}}',
+            'imagesize':'{{img.dictconfigs.0.imagesize}}',
+            'texto':'{{img.texto|safe}}'
+          });
+
+      {% endfor %}
+
+
+
+      {% for vid in r.videomodule_set.all %}
+      
+          medias.push({
+            'pk':'{{vid.pk}}',
+            'title':'{{vid.title}}',
+            'video':'{{vid.videoid}}',
+            'prevy':'{{vid.videoid}}',
+            'texto':'{{vid.texto}}',
+          });
+
+      {% endfor %}
+
+
+      {% for img in r.linkmod_set.all %}
+      
+          medias.push({
+            'pk':'{{img.pk}}',
+            'title':'{{img.title}}',
+            'link':'{{img.link}}',
+            'prevy':'/{{img.imagen}}'
+          });
+
+      {% endfor %}
+
+      {% for rtxt in  r.textmodule_set.all%}
+          var texto = '{{rtxt.texto|safe}}';
+          medias.push({
+            'pk':'{{rtxt.pk}}',
+            'texto':texto
+          });
+
+      {% endfor %}
+
+
+    if (medias.length>0){
+        medias = medias;
+        columns = '{{r.configur}}';
+    }
+    else{
+        medias = [{'prevy':'/static/imgs/link1.png',
+                   'downlink':[],
+                   'textsize':'48',
+                   'imagesize':'48',
+                   'invflotando':'left',
+                   'flotando':'right'
+                 }];
+        columnes = 1;
+    }
+
+    dbitem = {
+        'pk':'{{r.pk}}',
+        'module':'{{r.module}}',
+        'orden':'{{r.orden}}',
+        'name_module':'{{r.name_module}}',
+        'title':'default',
+        'nodeses':medias,
+        'videos':[],
+
+        'alto':'{{r.blankrow}}',
+        'columns':'{{r.configur}}'
+    };
+
+    $scope.rowsSec.push(dbitem);
+  {% endfor %}
+
+
+
+
+  $scope.columns = 1;
+
+  $scope.addRow = function(elem){
+    setmodule = $scope.genralmodule;
+
+    nodes = $scope.columns;    
+    
+    if(nodes<12 || nodes > 0)
+      columnes = 12/nodes;
+    else
+      columnes = 12;
+
+    item = {
+        'section':'{{section.pk}}',
+        'module':setmodule,
+        'title':'default',
+        'active':'active',
+        'columns':$scope.columns,
+        'nodeses':[],
+        'videos':[],
+        'columnes':columnes.toFixed()
+    };
+
+    for(i=0;i<nodes;i++){
+      item.nodeses.push({
+          'cc':'listo',
+          'prevy':'/static/imgs/link1.png',
+          'videos':[],
+          'downlink':[],
+          'texto':''
+
+        });
+    }
+
+    uri = "{% url 'addrow' %}";
+    $http({url:uri,method:'GET',params:item}).then(function(response){
+      
+      item.pk = response.data.pk;
+    });
+
+    $scope.rowsSec.unshift(item);
+    $scope.genralmodule='imglg';
+
+  }
+
+
+  // ---------- ADDING GRID 
+
+  $scope.addGrid = function(event,elem){
+
+      event.preventDefault();
+      row_order = elem.rowsSec.length+1;
+
+      var cabeceras = {'richtext':'textoHTML',
+                       'sideimg':'Imagen Lateral',
+                       'gridLink':'Links',
+                       'gridImg':'Grid de Imagenes',
+                       'imglg':'Imagen Larga',
+                       'video':'Videos',
+                       'gridbanco':'Banco',
+                       'blankrow':'BlankRow',
+                       'easysideimg':'Easy Imagen Larga',
+                       'htmltext':'htmltext',
+                       'spherenav':'spherenav'
+                      };
+
+      setmodule = $scope.genralmodule;
+      nodes = $scope.columns;    
+      
+
+      item = {
+          'section':'{{section.pk}}',
+          'name_module':cabeceras[setmodule],
+          'module':setmodule,
+          'title':'grip',
+          'nodeses':[],
+          'videos':[],
+          'columns':2,
+          'texto':'',
+          'orden':row_order
+      };
+
+
+        item.nodeses.push({
+            'id':'iddefault',
+            'link':'/default/',
+            'prevy':'/static/imgs/link1.png',
+            'downlink':[],
+            'texto':'',
+            'textsize':'48',
+            'imagesize':'48',
+          });
+
+      uri = "{% url 'addrow' %}";
+      $http({url:uri,method:'GET',params:item}).then(function(response){
+          item.pk = response.data.pk;
+          $scope.rowsSec.push(item);
+          $scope.genralmodule='imglg';
+          toastr('success','Se agregó correctamente'); 
+      });
+
+
+    }
+
+  // -----------END GRID
+
+  $scope.slayed = function(event,elem){
+    event.preventDefault();
+    ind = elem.item.nodeses.indexOf(elem.box);
+    
+    if(confirm('¿Desea eliminar el elemento?')){
+    
+    data = {'pku':elem.box.pk};
+    data['csrfmiddlewaretoken']='{{csrf_token}}';
+    data['step']=6;
+    data = $.param(data);
+    uri = '{% url "remover" %}';
+
+    $http({url:uri,method:'POST',data:data}).then(function(response){
+          if(response.data.removed=='ok'){
+            toastr('success',response.data.msg);      
+            elem.item.nodeses.splice(ind,1);    
+          }
+          
+    });
+    
+
+
+  }
+
+  }
+
+
+
+
+  $scope.slayed_banco = function(event,elem){
+    event.preventDefault();
+    ind = elem.item.nodeses.indexOf(elem.box);
+    
+    if(confirm('¿Desea eliminar el elemento?')){
+    
+    data = {'pku':elem.box.pk};
+    data['csrfmiddlewaretoken']='{{csrf_token}}';
+    data['step']=5;
+    data = $.param(data);
+    uri = '{% url "remover" %}';
+
+    $http({url:uri,method:'POST',data:data}).then(function(response){
+          if(response.data.removed=='ok'){
+            toastr('success','Elemento Eliminado');      
+            elem.item.nodeses.splice(ind,1);    
+          }
+          
+    });
+    
+
+
+  }
+
+  }
+
+
+
+
+  $scope.slayed_link = function(event,elem){
+      event.preventDefault();
+      ind = elem.item.nodeses.indexOf(elem.box);
+      
+      if(confirm('¿Desea eliminar el elemento?')){
+      
+      data = {'pku':elem.box.pk};
+      data['csrfmiddlewaretoken']='{{csrf_token}}';
+      data['step']=0;
+      data = $.param(data);
+      uri = '{% url "remover" %}';
+
+      $http({url:uri,method:'POST',data:data}).then(function(response){
+            if(response.data.removed=='ok'){
+              toastr('success','Elemento Eliminado');      
+              elem.item.nodeses.splice(ind,1);    
+            }
+            
+      });
+      
+
+
+    }
+
+  }
+
+
+
+  $scope.slayed_video = function(event,elem){
+      event.preventDefault();
+      ind = elem.item.nodeses.indexOf(elem.box);
+      
+      if(confirm('¿Desea eliminar el elemento?')){
+      
+      data = {'pku':elem.box.pk};
+      data['csrfmiddlewaretoken']='{{csrf_token}}';
+      data['step']=8;
+      data = $.param(data);
+      uri = '{% url "remover" %}';
+
+      $http({url:uri,method:'POST',data:data}).then(function(response){
+            if(response.data.removed=='ok'){
+              toastr('success','Elemento Eliminado');      
+              elem.item.nodeses.splice(ind,1);    
+            }
+            
+      });
+      
+
+
+    }
+
+  }
+
+ $scope.slaye_row = function(event,elem){
+    event.preventDefault();
+
+    ind = elem.rowsSec.indexOf(elem.item);
+    
+
+    if(confirm('¿Desea eliminar el elemento?')){
+    
+    data = {'pku':elem.item.pk};
+    data['csrfmiddlewaretoken']='{{csrf_token}}';
+    data['step']=7;
+    data = $.param(data);
+    uri = '{% url "remover" %}';
+
+    $http({url:uri,method:'POST',data:data}).then(function(response){
+          if(response.data.removed=='ok'){
+            toastr('success','El renglon se eliminó con éxito');      
+            elem.rowsSec.splice(ind,1);    
+          }
+          
+    });
+    
+
+
+  }
+
+  }
+
+
+  $scope.slayebox = function(items,elem){
+    
+    data = {'pku':elem.pk};
+    data['csrfmiddlewaretoken']='{{csrf_token}}';
+    data['step']=5
+    data = $.param(data);
+    uri = '{% url 'remover' %}';
+    $http({url:uri,method:'POST',data:data}).then(function(response){
+          if(response.data.removed=='ok'){
+            toastr('success',response.data.msg);      
+            //$scope.rowsSec.splice(elem.$index,1);    
+          }
+          
+    });
+
+  }
+
+
+
+  var tmpList = [];
+  
+  for (var i = 1; i <= 6; i++){
+    tmpList.push({
+      text: 'Item ' + i,
+      value: i
+    });
+  }
+  
+  $scope.list = tmpList;
+  
+  
+  $scope.sortingLog = [];
+  
+  $scope.sortableOptions = {
+    stop: function(e, ui) {
+      var neworder = '';
+      var rowx = ui.item.parent('ul:first');
+      jQuery.each(jQuery(rowx).children('li'),function(x,y){
+        nw = {};
+        pk = jQuery(y).attr('data-pk');
+        indexx = jQuery(y).index();
+        neworder = neworder + 'pk='+pk+'|'+indexx+'&';
+      });
+
+        $http({url:'/admon/reorder/?'+neworder,method:'GET'}).then(function(response){
+            swal(response.data.msg);
+        });
+
+
+      console.log(neworder);
+
+      }
+  };
+
+
+  $scope.myImage='';
+    $scope.myCroppedImage='';
+    $scope.imageChanged = false;
+    $scope.sec_name = '{{section.sec_name}}';
+    $scope.page_type = '{{section.page_type}}';
+    $scope.section = {'pk':'{{section.pk}}',
+                      'webimage':'{{section.webimage}}',
+                      'sec_name':'{{section.sec_name}}',
+                      'orden':'{{section.orden}}'};
+    $scope.sons = [];
+    $scope.tochange = null;
+    $scope.boxes = [];
+    $scope.imageCropResult = null;
+          $scope.showImageCropper = false;
+
+          $scope.$watch('imageCropResult', function(newVal) {
+            if (newVal) {
+              console.log('imageCropResult', newVal);
+            }
+            
+    });
+
+
+    $scope.changesec = function(elem){
+      $scope.section.sec_name = $scope.sec_name;
+      $scope.section.page_type = $scope.page_type;
+      data = {};
+      data['pk']=$scope.section.pk;
+      data['sec_name']=$scope.sec_name;
+      data['page_type']=$scope.page_type;
+      data['orden']=$scope.section.orden;
+      data['csrfmiddlewaretoken']='{{csrf_token}}';
+      data = $.param(data);
+      uris = "{% url 'addsection' %}";
+
+        $http({url:uris,method:'POST',data:data}).then(function(response){
+          if(response.data.saved=='ok')
+            toastr('success','Sección se guardo con éxito');
+          else
+            toastr('warning','Algo salió mal :(');    
+        });
+    }
+
+
+  $scope.addBox = function(elem){
+    elem.item.nodeses.push({'prevy':'/static/imgs/link1.png',
+                            'columnax':3,
+                            'texto':'',
+                            'textsize':'48',
+                            'imagesize':'48',
+                            'flotando':'left',
+                            'invflotando':'right'
+                            });
+  }
+
+  $scope.changeme = function(elem){
+    jQuery('#loader').click();
+
+    $scope.tochange = elem;
+    $scope.imageChanged = true;
+    //elem.box.src = 'reader.result';
+    
+  }
+
+
+  $scope.changemesmall = function(elem){
+    jQuery('#loader').click();
+    $scope.smaller = true;
+    $scope.tochange = elem;
+    $scope.imageChanged = true;
+    //elem.box.src = 'reader.result';
+    
+  }
+
+
+
+  $scope.crup=function(evt) {
+      var file=evt.currentTarget.files[0];
+      var reader = new FileReader();
+      reader.onload = function (evt) {
+        $scope.$apply(function($scope){
+              if($scope.smaller==true){
+                $scope.tochange.myImage=evt.target.result;
+                $scope.tochange.box.original=evt.target.result;
+                console.log('smalling');
+              }
+              else{
+                $scope.tochange.box.src = evt.target.result;
+              }
+            //$scope.tochange.myImage=evt.target.result;
+            $scope.tochange.vi=true;
+            //$scope.imageChanged = false;
+        });
+      };
+      reader.readAsDataURL(file);
+    };
+
+
+$scope.crupandsavemainimg = function(evt){
+
+      var file=evt.currentTarget.files[0];
+      var reader = new FileReader();
+      reader.onload = function (evt) {
+        $scope.$apply(function($scope){
+            $scope.tochange.webimage = evt.target.result;
+            $scope.tochange.sectionmainimage=evt.target.result;
+            $scope.tochange.vi=true;
+            
+        });
+      };
+      reader.readAsDataURL(file);
+
+
+}
+
+
+/* for sec image main*/
+  $scope.addimagesection = function(elem){
+    jQuery('#loadermainimage').click();
+      $scope.tochange = elem;
+  }
+
+
+
+
+  $scope.loadfoto=function(e){
+
+
+    var file    = e.currentTarget.files[0];
+      var reader  = new FileReader();
+
+      reader.onloadend = function (evtx) {
+      $scope.$apply(function($scope){
+              $scope.tochange.box.src = reader.result;
+            });
+      }
+
+      if (file) {
+        reader.readAsDataURL(file);
+      } 
+
+  }
+
+
+$scope.downloadfielinstance = null;
+$scope.putfileon = function(elem){
+    $scope.downloadfielinstance = elem[0];
+}  
+$scope.save_download = function(elem){
+    fieltoup = $scope.downloadfielinstance;
+    urix = "{% url 'savedownload' %}";
+    data = {};
+    if($scope.imageChanged==true){
+        data['imagen']=elem.box.src.replace(/^data:image\/(png|jpeg);base64,/, "");
+    }
+    data['title'] = elem.box.title;
+    data['pkid']=elem.box.pk;
+    data['rowpk']=elem.item.pk;
+    data['dwfile']=fieltoup;
+    data['columns']=elem.item.columns;
+    data['csrfmiddlewaretoken']='{{csrf_token}}';
+    data = $.param(data);
+    uri = "{% url 'savedownload' %}";
+    
+    $http({url:uri,method:'POST',
+        data:data,
+        headers: {'Content-Type': undefined },
+        transformRequest: angular.identity
+    }).then(function(response){
+      //elem.box.pk=response.data.pk;
+      //toastr('success','Se guardó con éxito');          
+    });
+    
+  }
+
+
+  $scope.changevideo = function(event,elem){
+    event.preventDefault();
+    $scope.theBestVideo = elem.video;
+  }
+
+  $scope.addvideo = function(event,elem){
+    event.preventDefault();
+
+    elem.box.prevy = elem.box.video;
+    
+    data = {};
+
+      if(elem.box.texto){
+      texto = elem.box.texto.replace(/\\n/g, "\\n");
+      texto = texto.replace(/[\n]/g, '\\n');
+
+      texto = texto.replace(/\\n/g, "\\n")
+                                      .replace(/\\'/g, "\\'")
+                                      .replace(/\\"/g, '\\"')
+                                      .replace(/\\&/g, "\\&")
+                                      .replace(/\\r/g, "\\r")
+                                      .replace(/\\t/g, "\\t")
+                                      .replace(/\\b/g, "\\b")
+                                      .replace(/\\f/g, "\\f");
+        }
+        data['videoid'] = elem.box.video;
+        data['title'] = elem.box.title;
+        data['pkid']=elem.box.pk;
+        data['rowpk']=elem.item.pk;
+        data['texto']=texto;
+        data['orden']=1;
+        data['columns']=1;
+        data['csrfmiddlewaretoken']='{{csrf_token}}';
+        data['step']=5;
+        data['csrfmiddlewaretoken']='{{csrf_token}}';    
+        data = $.param(data);
+        uri = "{% url 'savior' %}";    
+        $http({url:uri,method:'POST',data:data}).then(function(response){
+          elem.box.pk=response.data.pk;
+          toastr('success','Se guardó con éxito');          
+        });
+    $scope.micro = false;
+  }
+
+
+$scope.addDownloadcolumn = function(event,elem,typol){
+  event.preventDefault();
+  
+  elem.box.downlink.push({'down_file':'','down_title':'','type_link':typol});
+}
+
+
+// PARA AGREGAR LINKS DE DESCARGA A LOS GRIDS
+$scope.save_downloadlink = function(event,elem,modulo){
+  event.preventDefault();
+  if(!elem.box.pk){
+    toastr('warning','Debe guardar l ainformación del modulo');
+    return false;
+  }
+
+  data = {
+    'down_file':elem.dl.down_file,
+    'down_title':elem.dl.down_title,
+    'modulo':modulo,
+    'boxpk':elem.box.pk,
+    'pk':elem.dl.pk,
+    'sending':elem.dl.sending,
+    'type_link':elem.dl.type_link
+
+  };
+  data['csrfmiddlewaretoken']='{{csrf_token}}';
+  data = $.param(data);
+  
+  uri = '{% url "adddwlink" %}';
+
+  $http({url:uri,method:'POST',data:data}).then(function(response){
+        
+        if(response.data.saved=='ok'){
+          toastr('success',response.data.msg);
+          elem.dl.pk = response.data.pk; 
+        }
+
+        else{
+          toastr('warning',response.data.errors);      
+        }
+
+        
+  });
+
+}
+
+$scope.remove_downloadlink = function(event,elem){
+    event.preventDefault();
+    ind = elem.box.downlink.indexOf(elem.box.dl);
+    elem.box.downlink.splice(ind,1); 
+    
+    if(confirm('¿Desea eliminar el elemento?')){
+    
+    data = {'pku':elem.dl.pk};
+    data['csrfmiddlewaretoken']='{{csrf_token}}';
+    data['step']=9;
+    data = $.param(data);
+    uri = '{% url "remover" %}';
+
+    $http({url:uri,method:'POST',data:data}).then(function(response){
+          if(response.data.removed=='ok'){
+            toastr('success','Se eliminó con éxito.');      
+            elem.box.downlink.splice(ind,1);  
+          }
+          
+    });
+    
+
+
+  }
+}
+
+
+
+$scope.remove_imagenlarga = function(event,elem){
+    event.preventDefault();
+
+    ind = elem.item.nodeses.indexOf(elem.box);
+    
+    if(confirm('¿Desea eliminar el elemento?')){
+    
+    data = {'pku':elem.box.pk};
+    data['csrfmiddlewaretoken']='{{csrf_token}}';
+    data['step']=6;
+    data = $.param(data);
+    uri = '{% url "remover" %}';
+
+    $http({url:uri,method:'POST',data:data}).then(function(response){
+          if(response.data.removed=='ok'){
+            toastr('success','Se eliminó con éxito.');      
+            //elem.box.downlink.splice(ind,1);  
+            elem.item.nodeses.splice(ind,1); 
+          }
+          
+    });
+    
+
+
+  }
+}
+
+
+
+  $scope.save_link = function(elem){
+
+    data = {};
+
+    console.log(elem);
+    if(!elem.box.src && !elem.box.prevy){
+      toastr('warning','debe agregar una imagen'); 
+      return false;
+    }
+
+    if($scope.imageChanged==true){
+        data['webimage']=elem.box.src.replace(/^data:image\/(png|jpeg);base64,/, "");
+    }
+
+      if(elem.box.flotando)
+        data['flotando'] = elem.box.flotando;
+      if(elem.box.invflotando)
+        data['invflotando'] = elem.box.invflotando;        
+      if(elem.box.imagesize){
+        data['imagesize'] = elem.box.imagesize;
+        data['textsize'] = elem.box.textsize;
+      }
+
+      if(elem.box.texto){
+        texto = elem.box.texto;
+        texto = texto.replace(/\\n/g, "\\n");
+      }
+      else{
+        texto = '';
+      }
+        orden = elem.item.nodeses.indexOf(elem.box);        
+        data['associate_file'] = elem.box.associate_file;
+        data['title'] = elem.box.title;
+        data['pkid']=elem.box.pk;
+        data['rowpk']=elem.item.pk;
+        data['texto']=texto;
+        data['orden']=orden;
+        data['columns']=elem.item.columns;
+        data['csrfmiddlewaretoken']='{{csrf_token}}';
+        data['step']=2;
+        data['csrfmiddlewaretoken']='{{csrf_token}}';    
+        data = $.param(data);
+        uri = "{% url 'addmedia' %}";
+        $http({url:uri,method:'POST',data:data}).then(function(response){
+          console.log(response.data.pk);
+          if(response.data.pk){
+            elem.box.pk=response.data.pk;
+            toastr('success','Se guardó con éxito');
+          }
+          else{
+           toastr('warning','Debe llenar los campos'); 
+          }
+
+        });
+    $scope.micro = false;
+  }
+
+
+  $scope.save_banco = function(event,elem){
+    event.preventDefault();
+    indexor = elem.item.nodeses.indexOf(elem.box);
+
+
+    data = {};
+    if($scope.imageChanged==true){
+        data['webimage']=elem.box.original.replace(/^data:image\/(png|jpeg);base64,/, "");
+        data['smallimg']=elem.box.src.replace(/^data:image\/(png|jpeg);base64,/, "");
+    }
+
+      if(elem.box.flotando)
+        data['flotando'] = elem.box.flotando;
+      if(elem.box.invflotando)
+        data['invflotando'] = elem.box.invflotando;        
+      if(elem.box.imagesize){
+        data['imagesize'] = elem.box.imagesize;
+        data['textsize'] = elem.box.textsize;
+      }
+
+        //texto = elem.box.texto.replace(/'/g, "\\'");
+
+        if(elem.box.texto){
+        texto = elem.box.texto.replace(/'/g, "\\'");
+        texto = texto.replace(/[\n]/g, '\\n');
+        texto = texto.replace(/\\n/g, "\\n")
+                                      .replace(/\\'/g, "\\'")
+                                      .replace(/\\"/g, '\\"')
+                                      .replace(/\\&/g, "\\&")
+                                      .replace(/\\r/g, "\\r")
+                                      .replace(/\\t/g, "\\t")
+                                      .replace(/\\b/g, "\\b")
+                                      .replace(/\\f/g, "\\f");
+        }
+        else{
+          texto = '';
+        }
+
+        data['banco'] = 1
+        data['pkid']=elem.box.pk;
+        data['rowpk']=elem.item.pk;
+        data['cats']=elem.box.mycats;
+        data['texto']=texto;
+        data['orden']=indexor;
+        data['columns']=elem.item.columns;
+        data['csrfmiddlewaretoken']='{{csrf_token}}';
+        data['csrfmiddlewaretoken']='{{csrf_token}}';    
+        data = $.param(data);
+
+        uri = "{% url 'addmedia' %}";
+        $http({url:uri,method:'POST',data:data}).then(function(response){
+          elem.box.pk=response.data.pk;
+          toastr('success','Se guardó con éxito');          
+        });
+    $scope.micro = false;
+  }
+
+
+  $scope.save_blank = function(elem){
+        
+        data = {};
+        data['rowpk']=elem.item.pk;
+        data['alto']=elem.item.alto;
+        data['csrfmiddlewaretoken']='{{csrf_token}}';    
+        data = $.param(data);
+        uri = "{% url 'updateblank' %}";
+        $http({url:uri,method:'POST',data:data}).then(function(response){
+          
+          toastr('success','Se guardó con éxito');          
+        });
+    $scope.micro = false;
+  }
+
+
+
+
+
+
+  $scope.save_richtext = function(elem){
+
+    data = {};
+
+        texto = elem.box.texto.replace(/'/g, "\\'");
+        texto = texto.replace(/[\n]/g, '\\n');
+        texto = texto.replace(/\\n/g, "\\n")
+                                      .replace(/\\'/g, "\\'")
+                                      .replace(/\\"/g, '\\"')
+                                      .replace(/\\&/g, "\\&")
+                                      .replace(/\\r/g, "\\r")
+                                      .replace(/\\t/g, "\\t")
+                                      .replace(/\\b/g, "\\b")
+                                      .replace(/\\f/g, "\\f");
+        //console.log(texto);
+        //return false;
+        data['pkid']=elem.box.pk;
+        data['rowpk']=elem.item.pk;
+        data['texto']=texto;
+        data['columns']=elem.item.columns;
+        data['step']=2;
+        data['csrfmiddlewaretoken']='{{csrf_token}}';    
+        data = $.param(data);
+        uri = "{% url 'savior' %}";
+        $http({url:uri,method:'POST',data:data}).then(function(response){
+          elem.box.pk=response.data.pk;
+          toastr('success','Se guardó con éxito');          
+        });
+    $scope.micro = false;
+  }
+
+
+  $scope.addcat = function(){
+    var newcat = $scope.cat;
+
+    params = {'catname':newcat}
+    var pk = null;
+    uri = "{% url 'addcat' %}";
+    $http({url:uri,method:'GET',params:params}).then(function(response){
+      pk = response.data.pk;
+      cat = {'cat':newcat,pk:response.data.pk,'cats':[]}
+      $scope.cats.push(cat);
+    });
+
+    $scope.cat = '';
+
+  }
+
+  $scope.addsubcat=function(catitem){
+    newsubcat = catitem.subcat;
+    var pku = null;
+    params = {'catname':newsubcat,'parent':catitem.pk};
+    
+    uri = "{% url 'addcat' %}";
+    $http({url:uri,method:'GET',params:params}).then(function(response){
+      pku = response.data.pk;
+    catitem.cats.push({'catname':newsubcat,pk:response.data.pk,parent:catitem.pk});
+    });
+
+    catitem.subcat = '';
+
+  }
+
+
+  $scope.save_gridlink = function(elem){
+
+    data = {};
+    if($scope.imageChanged==true){
+        data['imagen']=elem.box.src.replace(/^data:image\/(png|jpeg);base64,/, "");
+    }
+        data['title'] = elem.box.title;
+        data['pkid']=elem.box.pk;
+        data['rowpk']=elem.item.pk;
+        data['link']=elem.box.link;
+        data['columns']=elem.item.columns;
+        data['csrfmiddlewaretoken']='{{csrf_token}}';
+        data['step']=1;
+        data['csrfmiddlewaretoken']='{{csrf_token}}';    
+        data = $.param(data);
+        uri = "{% url 'savior' %}";
+        $http({url:uri,method:'POST',data:data}).then(function(response){
+          if(response.data.pk){
+            elem.box.pk=response.data.pk;
+            toastr('success','Se guardó con éxito');          
+          }
+          else{
+           toastr('warning',response.data); 
+          }
+        });
+    $scope.micro = false;
+  }
+
+
+    angular.element(jQuery('#loader')).on('change',function(e){
+      $scope.crup(e);
+    });
+
+
+    angular.element(jQuery('#loadermainimage')).on('change',function(e){
+      $scope.crupandsavemainimg(e);
+    });
+
+
+
+
+});
+
+
+
+</script>
+
+<script type="text/javascript">
+  
+
+ function ishomer(){
+
+    if($(this).is(':checked'))
+        data = {'sec':'{{section.pk}}'};
+    else
+        data = {};
+
+    data['csrfmiddlewaretoken']='{{csrf_token}}';
+    
+    uri = "{% url 'ishome' %}";
+    
+    $.ajax({
+        url:uri,data:data,method:'POST',dataType:'json',
+        success:function(response){
+            console.log(response.ishome);
+        }
+    });
+  }
+
+
+
+
+
+$(document).ready(function(){
+
+
+    $('#ishome').click(ishomer);
+    $('.menutool li a').click(function(){
+      $('.nava').hide('speed');
+      var mytab = $(this).attr('href').replace('','');
+      $(''+mytab).show('slow');
+
+    });
+
+    $('[data-toggle="tooltip"]').tooltip(); 
+
+
+
+  var mockFile = { name: "banner2.jpg", size: 12345 };
+
+  Dropzone.options.myAwesomeDropzone = {
+    addRemoveLinks:true,
+    paramName: "dwfile", // The name that will be used to transfer the file
+    maxFilesize: 500, // MB
+    clickable:true,
+    accept: function(file, done) {
+      //console.log(file);
+       done();
+       toastr('success','Archivo guardado con éxito. ');
+    },
+    init: function () {
+        var myDropzone = this;
+            {% for fup in section.downloadmod_set.all %}
+              var mfile = {pk:'{{fup.pk}}',name:'{{fup.only_name}}',size:'{{fup.dwfile.size}}'};
+              myDropzone.emit("addedfile",mfile);    
+            {% endfor %}
+
+         
+      },
+    removedfile:function(elemento){
+
+      var elemento = elemento;
+
+      $.ajax({
+        url:'/admon/removefile/',
+        type:'get',
+        data:{'filename':elemento.pk},
+        success:function(response){
+          location.reload();
+        }
+      });
+    
+    }
+  };
+
+
+});
+
+
+
+</script>
+
+
+{%endblock%}

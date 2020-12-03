@@ -1,0 +1,14 @@
+<div style="padding:5% 0%;" ng-repeat="box in item.nodeses">
+
+	<div text-angular ng-model="box.texto" ng-blur="save_richtext($event,this);"></div>
+
+
+
+    <div style="text-align: right;margin-top: 30px;">
+      <a href="#links" ng-click="save_richtext($event,this);micro=false;" class="ok_box_gris">
+      <img src="/static/imgs/check.png" />
+      </a>
+    </div>
+
+</div>
+

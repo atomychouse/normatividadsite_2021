@@ -1,0 +1,190 @@
+{% extends "campainsapp/base.html" %}
+
+{%block content%}
+   <h2 class="titlebox_campains">EDICIÓN EN GRUPO</h2>
+   <div style="padding: 20px;">
+   	<a href="/campains/">REGRESAR</a>
+   </div>
+  <section ng-controller="campsCtr" style="padding: 20px 0px;">
+
+
+  <div class="row">
+
+    <div class="col-md-8 col-xl-8 col-sm-8" style="vertical-align: top;">
+      <div class="row">
+        {% for r in camps %}
+
+          <div id="{{r.pk}}_item" class="col-xs-6 col-xl-4 col-sm-6 col-lg-4 col-md-6"  style="margin:10px 0px;">
+            
+            {% if 'image' in r.typofile %}
+            <div class="c_imagebox" 
+             style="background: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0),rgba(0, 0, 0,0.9)),url('/{{r.campanyafile_set.all.0.itemfile.url}}');background-size:cover;">
+              
+            {% else %}
+            <div class="c_imagebox" 
+             style="background: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0),rgba(0, 0, 0,0.9)),url('/static/campains_crops/{{r.pk}}_tb.jpg');background-size:cover;">
+              
+            {% endif %}
+              &nbsp;
+                <div class="image_top_bar">
+                  <div class="left_top_bar infofile">
+                    {{r.fileinfo}}
+                  </div>
+                  <div class="clicable rmbox" ng-click="delsingle({{r.pk}});">x</div>
+                  <div style="clear: both;height: 0px;">&nbsp;</div>
+                </div>
+                <div class="bottom_box">
+                  <div class="left_top_bar">
+                    <span style="color:#fff;text-decoration:underline;"></span>
+                  </div>
+                  <div class="wboxchbx">
+                    <span style="display: inline-block;padding-right: 10px;">Seleccionar</span>
+                    <input type="checkbox" name="selecciona[]" checked="true" value="{{r.pk}}" class="checkar">
+                  </div>
+                  <div style="clear: both;height: 0px;">&nbsp;</div>
+
+                </div>
+            
+            
+
+
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-md-3 col-xl-3 col-sm-3" style="vertical-align: top;">
+      <form id="formsend" action="/campains/savegroup/" method="post" class="sendit">
+        {% csrf_token %}
+      {% for x in camps %}
+        <input id="edit_{{x.pk}}" type="hidden" name="keyg[]" value="{{x.pk}}">
+      {% endfor %}
+
+
+            <div>
+
+                      <div ng-repeat="c in cats">
+                        <label>||c.name||</label>
+              
+                        <select id="cat_||c.pk||" name="cats[]" class="form-control alto catcat">
+                          <option selected="true" value="">Seleccione...</option>
+                          <option value="||sc.pk||" ng-repeat="sc in c.subcats">||sc.name||</option>
+                        </select>
+                      </div>
+
+              
+            </div>
+
+
+               <div style="padding-top:30px;">
+                        <label>Status</label>
+                        <select name="statuscamp" ng-model="editando.statuscamp"  class="form-control alto">
+                                <option value="status_activado" ||||>Activa</option>
+                                <option value="status_pasada">Pasada</option>
+                        </select>
+                </div>
+                <div>
+                        <label>Mes</label>
+
+                         <select id="mes_display" 
+                                name="mes_display" class="form-control alto" 
+                                ng-model="editando.mes_display" 
+                                ng-options="i.num as i.mes for i in meses">
+                        </select>
+                </div>
+                <div>
+                        <label>Año</label>
+
+                        <select id="anyo_display" 
+                                name="anyo_display" class="form-control alto" 
+                                ng-model="editando.anyo_display" 
+                                ng-options="i as i for i in years">
+                        </select>
+
+                </div>
+
+
+
+
+            <div>
+             <button type="submit" class="btn btn-primary">GUARDAR Y PUBLICAR</button>  
+            </div>
+        </form>
+    </div>
+  </div>
+
+
+</section>
+{% endblock%}
+
+
+
+{% block extrajs %}
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+
+  $('#formsend').submit(function(e){
+  		e.preventDefault();
+  		
+  		url = $(this).attr('action');
+  		data = $(this).serializeArray();
+  		$.ajax({url:url,type:'post',data:data,
+  			success:function(response){
+  				hecho = null;
+          toastr('success','La información de guardó con éxito...');
+  			}
+  		});
+
+    
+  });
+
+
+
+	var filesadds = 0;
+	$('#adds').text(filesadds);
+
+  Dropzone.options.myAwesomeDropzone = {
+	    addRemoveLinks:false,
+	    maxFilesize: 800, // MB
+	    clickable:true,
+	    acceptedFiles:'image/*,video/*',
+
+	    accept: function(file, done) {
+	      done();
+	    },
+	    init: function () {
+	        var myDropzone = this;
+
+	      },
+	    removedfile:function(elemento){
+
+	      var elemento = elemento;
+	    },
+      queuecomplete:function(file){
+       
+        $.get( "{% url 'runcomand' %}", function( data ) {
+          
+          dnedon = null;
+        });
+
+          this.removeAllFiles();
+      }
+	  };
+
+    $('.checkar').click(function(){
+      if($(this).is(':checked')){
+        $('#formsend').append('<input type="hidden" name="keyg[]" value="'+$(this).val()+'" id="edit_'+$(this).val()+'" />');
+      }
+      else{
+        $('#edit_'+$(this).val()).remove();
+      }
+    });
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,474 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="atomyc.site">
+        <title>Normatividad Claro</title>
+        <meta name="theme-color" content="#496201">
+        <!-- core CSS -->
+        <link href="/static/css/bootstrap.css" rel="stylesheet">
+        <link href="/static/css/clarofuentes.css" rel="stylesheet">
+        <link href="/static/css/vfonts.css" rel="stylesheet">
+        <link href="/static/css/yamm.css" rel="stylesheet">
+        <link href="/static/css/defaults.css?v=1.1" rel="stylesheet">
+        <link href="/static/css/demo.css?v=1.1" rel="stylesheet">
+        <link rel="stylesheet" href="/static/owl-carousel/owl.carousel.css">
+        <link rel="stylesheet" href="/static/owl-carousel/owl.theme.css">
+        <link rel="stylesheet" href="/static/css/photo-sphere-viewer.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/6.3.3/video-js.css" rel="stylesheet">
+        <link href="/static/css/diego.css?v=1.1" rel="stylesheet">
+
+
+        {%block extras%}{%endblock%}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-128995686-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-128995686-1');
+</script>
+
+
+</head>
+<body ng-app='mainApp'>
+
+<div class="blendmode">&nbsp;</div>
+    <!-- Static navbar -->
+    <nav class="navbar yamm navbar-default navbar-static-top" ng-controller="menuCtr">
+      <div class="headbox">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            
+            <span class="sr-only">Toggle navigation</span>
+            
+            <span class="lnr lnr-menu" style="color:#fff;font-size:30px;font-weight:bolder;"></span>
+
+
+          </button>
+          <a class="navbar-brand" href="/home/" style="background-image:url('||logofile||');background-repeat: no-repeat;background-position: center center;" >
+          &nbsp;</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            
+            <li class="dropdown yamm-fw" ng-repeat="sec in list | orderBy : 'orden'" >
+                <a ng-if="sec.cols.length<1" href="/section/||sec.sec_slug||" onmouseover="plax(this);" class=" master">||sec.sec_name||</a>
+                <a ng-if="sec.cols.length>0" href="#"  data-toggle="dropdown" onmouseover="plax(this);"   class="dropdown-toggle master">||sec.sec_name|| <span class="lnr lnr-chevron-down"></span></a>
+
+              <ul class="dropdown-menu" ng-if="sec.cols.length>0" onmouseleave="plox();">
+                
+
+                
+                <li class="grid-demo" style="margin-top: 5px;">
+                        <div class="col-sm-2 col-md-2" ng-repeat="col in sec.cols" ng-if="col.secs.length>0">
+                            <div class="secname colname" >
+                              <span>||col.col_name||</span>
+
+                            </div>
+                            <ul class="listmenu ">
+                                <li ng-repeat="sec_col in col.secs" class="subsec">
+                                    <a href="/section/||sec.sec_slug||/||col.s_col_name||/||sec_col.sec_slug||" class="linkbigmenu">
+                                      ||sec_col.sec_name||
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <ul class="listmenu movilemenu" style="display: none;">
+                                <li ng-repeat="sec_col in col.secs" class="subsec">
+                                    <a href="/section/||sec.sec_slug||/||col.s_col_name||/||sec_col.sec_slug||" class="linkbigmenu">
+                                      ||sec_col.sec_name||
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    
+                </li>
+              </ul>
+
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            
+            <li class="dropdown yamm-fw">
+              <a href="/?logout=1" class="master"><span class="lnr lnr-power-switch"></span></a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div style="min-height:90%;height:auto;">
+    {% block content%}
+    {% endblock %}
+    </div>
+    <footer>&nbsp;</footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/owl-carousel/owl.carousel.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/angular.min.js"></script>
+    <script src="/static/js/angular-route.min.js"></script>
+
+    <script src="/static/js/three.min.js"></script>
+    <script src="/static/js/D.min.js"></script>
+    <script src="/static/js/uevent.min.js"></script>
+    <script src="/static/js/doT.min.js"></script>
+    <script src="/static/js/photo-sphere-viewer.js"></script>
+    
+
+    <script type="text/javascript">
+        var myapp = angular.module('mainApp',['ngRoute']);
+        var customInterpolationApp = angular.module('customInterpolationApp', []);
+        myapp.config(function($interpolateProvider) {
+            $interpolateProvider.startSymbol('||');
+            $interpolateProvider.endSymbol('||');
+        });
+        
+        myapp.controller('menuCtr',function($scope,$http){
+            
+            $http.get("{% url 'secciones' %}").then(function(response){
+                $scope.list = response.data;
+                console.log($scope.list);
+                
+            });
+
+
+            $http.get("/admin/chlogo/").then(function(response){
+                $scope.logofile = response.data.logo;
+            });
+
+
+
+
+        });
+
+    </script>
+
+
+<script>
+
+
+        if($('#player').length>0){
+          // 2. This code loads the IFrame Player API code asynchronously.
+          var tag = document.createElement('script');
+
+          tag.src = "https://www.youtube.com/iframe_api";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+          // 3. This function creates an <iframe> (and YouTube player)
+          //    after the API code downloads.
+          var player;
+          function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+              videoId: '{{fv}}',
+            });
+          }
+
+          // 4. The API will call this function when the video player is ready.
+          function onPlayerReady(event) {
+            event.target.playVideo();
+          }
+
+          // 5. The API calls this function when the player's state changes.
+          //    The function indicates that when playing a video (state=1),
+          //    the player should play for six seconds and then stop.
+          var done = false;
+          function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING && !done) {
+              setTimeout(stopVideo, 6000);
+              done = true;
+            }
+          }
+          function stopVideo() {
+            player.stopVideo();
+          }
+
+  }
+    </script>
+
+
+    <script type="text/javascript">
+
+    var sendfileargs = {};
+       
+    function plax(thy){
+      $('.selecteda').removeClass('selecteda');
+      $(thy).addClass('selecteda');
+
+    }
+
+    function plox(){
+      $('.selecteda').removeClass('selecteda');
+    }
+
+
+
+        $('.dropdown').hover(function(){ 
+            $('.dropdown-toggle', this).trigger('click'); 
+        });
+
+        $(document).ready(function(){
+
+
+ 
+
+
+
+        $("#owl-example").owlCarousel({
+            items : 2,
+            navigation : false,
+            pagination:false,
+            response:true
+        });
+
+        var owl = $(".owl-carousel").data('owlCarousel');
+
+        $('.next').click(function(e){
+            e.preventDefault();
+            owl.next();
+        });
+
+        $('.prev').click(function(e){
+            e.preventDefault();
+            owl.prev();
+        });
+
+
+        $('.changevideo').click(function(e){
+            e.preventDefault();
+            videopk = $(this).attr('data');
+            player.loadVideoById(videopk);
+        });
+
+
+
+        var catsel = [];
+        $('.checat').click(function(e){
+          var valore = $(this).val();
+
+          if($(this).is( ":checked" )){
+            esta = catsel.indexOf(valore);
+            if(esta<0){
+              catsel.push(valore);
+            }
+
+            $('.images').hide();
+            $.each(catsel,function(x,y){
+              $('[data-cats*="\"'+y+'\""]').show();
+            });
+
+
+          }
+          else{
+              esta = catsel.indexOf(valore);
+              catsel.splice(esta,1);
+              $('.images').hide();
+              $.each(catsel,function(x,y){
+                $('[data-cats*="\"'+y+'\""]').show();
+              });
+              if(catsel.length==0){
+                $('.images').show();
+              }
+
+          }
+
+        });
+
+
+
+    var $lightbox = $('#lightbox');
+    
+    $('[data-target="#lightbox"]').on('click', function(event) {
+        var $img = $(this).find('img'),
+            $txtbox = $(this).parent('.images:first').find('.hilegal'),
+      $titv = $(this).parent('.images:first').find('.hilegal'),
+      $descpv = $(this).parent('.images:first').find('.descrpv'),
+            hrefdw = '/dw/?f='+$img.attr('data-dw'),
+            extt = $img.attr('data-ext'),
+            $btns = $(this).parent('.images:first').find('.descargadas').html(),
+            src = $img.attr('data-src'),
+            texto = $txtbox.html(),
+            alt = $img.attr('alt'),
+            css = {
+                'maxWidth': $(window).width() + 100,
+                'maxHeight': $(window).height() + 100
+            };
+        $lightbox.find('.close').addClass('hidden');
+        $lightbox.find('img').attr('src', src);
+        $lightbox.find('img').attr('alt', alt);
+        //$lightbox.find('img').css(css);
+        $lightbox.find('#legales').html(texto);
+  $lightbox.find('#titboxv').html($titv);
+  $lightbox.find('#descpv').html($descpv);
+
+        //$lightbox.find('#btndown').attr('href',hrefdw).show().html(extt);
+        $lightbox.find('#descargaslinks').html('').html($btns);
+    });
+   
+    $videobox = $('#videobox');
+
+    $('[data-target="#videobox"]').on('click', function(event) {
+        var $img = $(this).find('img'),
+            $titv = $(this).parent('.images:first').find('.hilegal').text(),
+            $descpv = $(this).parent('.images:first').find('.descrpv').text();
+        $videobox.find('#titboxv').html($titv);
+        $videobox.find('#descpv').html($descpv);
+
+    });
+
+
+
+
+
+ 
+    $lightbox.on('shown.bs.modal', function (e) {
+        var $img = $lightbox.find('img');
+            
+        //$lightbox.find('.modal-dialog').css({'width': $img.width()});
+        $lightbox.find('.close').removeClass('hidden');
+    });
+
+        
+
+
+
+    // CAMPANYAS LIGTHBOXES
+
+    var lightbox = $('#cp_lightbox');
+    var hrefdw;
+    
+    $('[data-target="#cp_lightbox"]').on('click', function(event) {
+
+      console.log('saxxxx');
+        hrefdw = '/dw/?f='+$(this).attr('data-original');
+        
+        
+        var css = {
+                'maxWidth': $(window).width() + 100,
+                'maxHeight': $(window).height() + 100
+            };
+
+
+
+        
+        lightbox.find('img').attr('src', $(this).attr('data-deskp'));
+
+        $('#btndown').attr('href',hrefdw);
+
+        
+    });
+   
+
+
+    var videobox = $('#cp_videobox');
+
+    $('[data-target="#cp_videoboxx"]').on('click', function(event) {
+
+
+
+
+        jsplayer.src({ type: "video/mp4", src:$(this).attr('data-original')});
+    });
+
+
+
+
+
+ 
+    lightbox.on('shown.bs.modal', function (e) {
+        var img = lightbox;
+        //$lightbox.find('.modal-dialog').css({'width': $img.width()});
+        lightbox.find('.close').removeClass('hidden');
+    });
+
+        
+
+
+    // END CAMPANYAS
+
+
+
+
+    $('.sender').click(function(e){
+      e.preventDefault();
+      fileid = $(this).attr('data-file');
+      sendfileargs = {'fileid':fileid};
+      var uri = location.origin+'/dw/';
+      
+      $('#ligalink').text(uri+'?f='+fileid);
+
+    });
+
+  });
+  // ENDREADY
+
+function validateEmail(email) {
+  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+  function enviando(){
+
+    $('.errs').remove();
+
+    nombre_envio = $('[name="nombre_envio"]').val();
+    correo_envio = $('[name="correo_envio"]').val();
+    
+    va = validateEmail(correo_envio);
+
+    if(!va){
+      $('[name="correo_envio"]').after('<div class="errs">Proporcione un correo valido</div>'); 
+    }
+    if(nombre_envio.length<1){
+      $('[name="nombre_envio"]').after('<div class="errs">Proporcione un nombre</div>'); 
+    }
+
+    sendfileargs['nombre_envio']=nombre_envio;
+    sendfileargs['correo_envio']=correo_envio;
+    sendfileargs['csrfmiddlewaretoken']='{{csrf_token}}';
+
+
+     sendfileargs = $.param(sendfileargs);
+
+    if($('.errs').length<1){
+      $('.submiter').append('<div>Espere porfavor ...</div>');
+      $.ajax({url:'/sender/',
+        data:sendfileargs,
+        type:'POST',
+        
+        success:function(response){
+            $('.submiter').hide().after('<h3>Su mensaje se ha enviado con éxito.</h3>');
+        }
+
+      });
+
+    }
+
+  }
+
+
+
+
+
+
+    </script>
+
+
+
+
+{% block extrajs %}{% endblock %}
+</body>
+
+</html>

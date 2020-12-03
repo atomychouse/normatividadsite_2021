@@ -1,0 +1,85 @@
+
+{% for box in rw.medias %}
+      <div class="col-sm-{{rw.configur}} col-md-{{rw.configur}} siderow">
+        <div class="row">
+            <div style="width:{{box.dictconfigs.0.imagesize}}%;float:{{box.dictconfigs.0.flotando}};text-align:left;">
+                <img  src="/{{box.webimage}}"  class="img-responsive"  />
+            </div>
+
+            <div style="width:{{box.dictconfigs.0.textsize}}%;float:{{box.dictconfigs.0.invflotando}};text-align:left;">
+            
+                <h1>{{box.title}}</h1>
+                <div class="boxtext">{{box.texto|safe|linebreaksbr}}</div>
+            
+                <div style="text-align: left;">
+                {% for lx in box.downloadsl%}                    
+                    {% if lx.type_link in 'link' %}
+                        {% if 'static' in lx.dfile %}
+                        <a class="red-btn" href="/{{lx.dfile}}" target="_blank">{{lx.dtitle}}</a>
+                        {% else %}
+                        <a class="red-btn" href="/static/{{lx.dfile}}" target="_blank">{{lx.dtitle}}</a>
+                        {% endif %}                    
+                    {% else %}
+                        <a href="/dw/?f=/{{lx.dfile}}" target="_blank" class="red-btn">{{lx.dtitle}}</a>
+                    {% if lx.sending %}
+                        <a href="#" class="grey-btn sender" data-file="{{lx.dfile}}" data-toggle="modal" data-target="#sendmailbox">
+                        <span class="lnr lnr-envelope"></span> </a>
+                    {%endif%}
+
+                    {% endif %}
+                {% endfor %}
+                </div>
+            </div>
+
+            <div style="clear:both;height:1px;"></div>          
+        </div>
+        <div style="clear:both;height:80px;"></div>
+        </div>
+
+
+
+
+      <div class="col-sm-12 col-md-12 responsiverow">
+        <div class="row">
+
+
+            <div style="width:100%;text-align:center;">
+            
+                <h1>{{box.title}}</h1>
+                <div style="width:100%;text-align:center;">
+                    <img  src="/{{box.webimage}}"  class="img-responsive" style="margin: auto !important; " />
+                </div>
+
+                <div class="boxtext">{{box.texto|safe|linebreaksbr}}</div>
+            
+                <div>
+                {% for lx in box.downloadsl%}                    
+                    {{lx}}
+                    {% if lx.type_link in 'link' %}
+                        {% if 'static' in lx.dfile %}
+                        <a class="red-btn" href="/{{lx.dfile}}" target="_blank">{{lx.dtitle}}</a>
+                        {% else %}
+                        <a class="red-btn" href="/static/{{lx.dfile}}" target="_blank">{{lx.dtitle}}</a>
+                        {% endif %}                    
+                    {% else %}
+                        <a href="/dw/?f=/{{lx.dfile}}" target="_blank" class="red-btn">{{lx.dtitle}}</a>
+                    
+                    {% if lx.sending %}
+                        <a href="#" class="grey-btn sender" data-file="{{lx.dfile}}" data-toggle="modal" data-target="#sendmailbox">
+                        <span class="lnr lnr-envelope"></span> </a>
+                    {%endif%}
+
+                    {% endif %}
+                {% endfor %}
+                </div>
+            </div>
+
+                      
+        </div>
+        <div style="clear:both;height:80px;"></div>
+        </div>
+
+
+
+
+{% endfor %}        

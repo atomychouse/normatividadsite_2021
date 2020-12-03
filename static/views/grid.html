@@ -1,0 +1,76 @@
+  <select name="columns" ng-model="item.columns"  style="color:#000;">
+    <option value="6">2</option>
+    <option value="4">3</option>
+    <option value="3">4</option>
+    <option value="2">6</option>
+    <option value="1">12</option>
+  </select>
+
+  <section style="padding:10px 2%;">
+    <div class="addy_box">
+      <a href="#agregar" id="masbox" class="vectorbtn" ng-click="addBox(this);$event.preventDefault();">
+        <span class="lnr lnr-plus-circle"></span>
+      </a>  
+    </div>
+    <div class="row">
+      <div class="col-sm-||item.columns|| col-md-||item.columns|| varito" ng-repeat="box in item.nodeses">
+        <div class="thumbnail" style="background-color:#333;text-align: center;">
+            <div class="ok_l_box" style="position:absolute;width:10% !important;">
+              <a href="#links" class="vectorbtn" ng-click="changeme(this);micro=true;">
+                <span class="lnr lnr-camera"></span>
+              </a>
+            </div>
+              <div class="ok_box">
+                <a href="#links"  ng-click="slayed($event,this);">
+                  <span class="lnr lnr-cross-circle"></span>
+                </a>  
+              </div>
+              <div class="cropArea" ng-show="micro" style="position:absolute;left:12%;">
+                <img-crop image="myImage" image="||box.src||" area-type="square"  result-image="box.src"></img-crop>
+              </div>
+            <img ng-show="vi" ng-src="||box.src||"  class="img-thumbnail changeme img-responsive" alt="doctor" width="100%" >
+            <img ng-hide="vi" ng-src="||box.prevy||"  width="100%"  />
+            
+            <div class="link_box_admin">
+              <input type="text" name="link_box" ng-model="box.title" style="width: 100%;" class="lightinput"  />              
+            </div>
+
+            <div class="link_box_admin">
+              <textarea ng-model="box.texto" style="width: 100%;" rows="9" style="color:#333;">||box.texto||</textarea>              
+            </div>
+            <div class="downloadmenu" ng-repeat='dl in box.downlink'>
+            <input type="text" class="lightinput" ng-model="dl.type_link" readonly="readonly" />
+            <input type="text" class="lightinput" ng-model="dl.down_title" placeholder="titulo descarga" required="required" />
+            <input type="text" class="lightinput" ng-model="dl.down_file" placeholder="archivo descarga" required="required"/>
+
+             <div class="addy_box">
+              <a href="#links" ng-click="remove_downloadlink($event,this);">
+                <span class="lnr lnr-cross-circle"></span>
+              </a>
+
+              <a href="#links" ng-click="save_downloadlink($event,this,'grid');">
+                <span class="lnr lnr-checkmark-circle"></span>
+              </a>
+            </div>
+           
+            </div>
+
+            <div class="ok_box">
+              <a href="#links" ng-click="addDownloadcolumn($event,this,'link');">
+                <span class="lnr lnr-link"></span>
+              </a>
+
+              <a href="#links" ng-click="addDownloadcolumn($event,this,'download');">
+                <span class="lnr lnr-download"></span>
+              </a>
+              <a href="#links" ng-click="save_link(this);micro=false;"><span class="lnr lnr-checkmark-circle"></span></a>
+            </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+

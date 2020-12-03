@@ -1,0 +1,133 @@
+<form action="{% url 'addbancofirst' %}"
+      class="dropzone"
+      id="my-awesome-dropzone" style="height:100%;">
+      <p class="dz-message">Agregar Archivos aquí</p>
+      {% csrf_token %}
+      <div class="dz-filename"><span data-dz-name></span></div>
+
+      <input type="hidden" name="rowpk" value="||item.pk||" />
+</form>
+
+
+  <section style="padding:10px 2%;">
+    <div class="add_box">
+  
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12" ng-repeat="box in item.nodeses" style="margin-top:30px;" ng-if="box.pk">
+      <div class="row">
+        <div class="col-md-4 col-sm-4 imagen" style="vertical-align: top;">
+
+              <div class="" style="text-align:left;position: relative;text-align: left;height: 0px;">
+              <a href="#links" class="boton red" ng-click="changemesmall(this);micro=true;">
+                <span class="lnr lnr-camera"></span>
+              </a>
+              </div>
+                <div style="text-align: right;position: relative;height: 0px;">
+                <a href="#links" class="boton dgris" ng-click="slayed_banco($event,this);">
+                  <span>x</span>
+                </a> 
+                </div>
+
+              <div class="cropArea" ng-show="micro" style="position:absolute;left:12%;">  
+                
+                <img-crop image="myImage" image="||box.src||" 
+                          area-type="square" result-image-size="{w:200,h:200}"  result-image-quality="1.0"  area-min-size="10" 
+                          result-image="box.src" ></img-crop>
+                          
+              </div>
+
+            <img ng-show="vi" ng-click="micro=false;" 
+                 ng-src="/||box.webimage||"  
+                 class="img-thumbnail changeme img-responsive" 
+                 alt="doctor"  >
+            <img ng-hide="vi" ng-src="/||box.webimage||"   class="img-responsive" />
+            <img ng-show="vix" ng-src="/||box.webimage||"   class="img-responsive"  />
+            <div style="position:relative;text-align: right;height: 0px;bottom:32px;">
+
+
+
+            </div>
+        </div>
+        <div class="col-md-7 col-sm-7 legales" style="vertical-align: top;">
+              <div>
+                <label>Usar Recorte de imagen</label>
+                <input type="checkbox" ng-model="box.recortar" ng-true-value="'true'"  > 
+              </div>
+              <div>
+                <label style="font-weight: bolder;">ES VIDEO</label>
+                <input type="checkbox" ng-model="box.isvideo" ng-true-value="'true'" ng-false-value="'false'" ng-checked="box.isvideo"> 
+              </div>
+
+              <div style="margin:10px 0px;">
+                <input type="text" name="t[]" ng-model='box.titulo' style="width: 100%;" placeholder="Título" class="form-control" />
+              </div>
+
+              <div>
+              
+
+              <textarea rows="2" class="lightinput" placeholder="TEXTOS Y LEGALES" ng-model='box.texto' style="width:100%;"></textarea>  
+              </div>
+             
+              
+              <div style="display: inline-block;width:79%;">
+                <ul ng-repeat="cat in cats" class="lb">
+                  <li class="lb catx" style="width:auto;margin:1px 5px;" ng-class="{'catsel' : box.mycats.indexOf(scat.catslug)>-1 }"  ng-repeat="scat in cat.cats">
+                    <a href="#cats" ng-click="selectCat($event,scat,box);">||scat.catname||</a>
+                  </li>
+                </ul>
+                <div class="link_box_admin" style="display: none;">           
+                  <select ng-model="box.mycats" multiple="multiple" class="lightinput" style="width:90%;height:250px;">
+                    <optgroup label="||cat.cat||" ng-repeat="cat in cats">
+                      <option  ng-repeat="scat in cat.cats" ng-value="scat.catslug">||scat.catname||</option>
+                    </optgroup>
+                  </select>
+
+                </div>
+
+            </div>
+            <div>
+                <ul>
+                <li id="selfimg" class="lb">
+                <a href="/||box.webimage||" target="_blank" class="boton red" style="margin-right:-5px;" >
+                  ||box.selfimg||
+                </a>
+                </li>
+                <li ng-repeat="dwf in box.descargar" class="lb" style="margin:10px;">
+                <a href="/||dwf.ruta||" target="_blank" class="boton red" style="margin-right:-5px;" >
+                  ||dwf.extt||
+                </a>
+                <a href="#movepk" ng-click="removef($event,dwf);" ng-if="dwf.pk" class="boton red">x</a>
+                </li>
+                </ul>
+                
+                <br/>
+                <div>
+               <a class="ga-sm ga6 lb" ng-click="banco_dl($event,this);" style="margin:0px -3px !important;padding:7px 12.5px;">+file</a>
+               </div>
+            </div>
+
+            <div style="display: inline-block;width: 20%;">
+                <div style="text-align: right;margin-top: 30px;">
+                  <a href="#links" ng-click="save_banco($event,this);micro=false;" class="ok_box_gris">
+                  <img src="/static/imgs/check.png" />
+                  </a>
+                <a href="#agregar" id="masbox" ng-if="$last" class="ok_box_rojillo" ng-click="addBox($event,this);">
+                  <span> + </span>
+                </a>
+                </div>
+              
+            </div>
+
+        </div>
+
+
+
+
+
+      </div>
+
+      </div>
+    </div>
+  </section>
+

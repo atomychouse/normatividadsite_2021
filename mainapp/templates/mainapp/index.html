@@ -1,0 +1,68 @@
+{% extends "mainapp/base_blank.html" %}
+
+{% block extrajs %}
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('.sendit').submit(sendit);
+
+
+			$('.selector').click(function(e){
+				e.preventDefault();
+				clases = $(this).attr('class');
+				typeus = $(this).attr('data');
+				
+				if(clases.indexOf('active')<0){
+					$('.selector').removeClass('active');
+					$(this).addClass('active');
+					$('#usergroup').val(typeus);
+
+				}
+
+			});
+
+
+		});
+	</script>
+
+{% endblock %}
+
+
+{%block content%}
+
+
+<div class="tablebox">
+	<div class="tablerow">
+		<div class="tablecell">
+			<div><img src="/static/imgs/logo.png" /></div>
+			<h2 class="redboxt bolding">Normatividad Claro</h2>
+			<form name="secure" action="/singin/" method="post" class="sendit formlogin" >
+				{% csrf_token %}
+				<div>
+					<input type="text" class="formcontrol" name="usuarius" id="id_usuarius" placeholder="User">
+				</div>
+				<div>
+					<input type="password" name="passo" id="id_passo" class="formcontrol" placeholder="Password">
+				</div>
+				<div style="text-align: right;margin-top:2vmax;">
+					<button type="submit" class="red-btn">ENTRAR</button>
+				</div>
+
+			</form>
+		</div>
+	</div>
+
+</div>
+{% endblock %}
+
+
+<div style="padding-bottom: 11%;">
+	<div  class="round_box">
+			<h4>Ingresa a tu cuenta</h4>
+	</div>
+
+
+</div>
+
+
+

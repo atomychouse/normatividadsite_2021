@@ -1,0 +1,88 @@
+{# LA IMAGEN CROPING  #}
+
+<div id="cropimage" style="">
+    {% if section.webimage %}
+    <img src="{{section.webimage}}" />
+    {% endif %}
+</div>
+
+<input type="file" id="loadermainimage" style="display: none;" />
+
+
+
+<div style="height:100px;">&nbsp;</div>
+{# PANEL PARA AGREGAR RENGLON #}
+
+
+
+
+<div>
+  <label for="ishome" style="color:#fff;">Es HomePage</label>
+  <input type="checkbox" name="ishome" value="true" {% if section.ishome %}checked="checked"{% endif %} id="ishome" />
+</div>
+
+
+
+
+<div class="row">
+  <div class="col-md-3" style="vertical-align: top;">
+
+    
+    <input type="text" name="itemcat" placeholder="NEUVA CATEGORIA" class="lightinput" ng-model="cat" />
+    <a href="#" ng-click="addcat();$event.preventDefault();" class="boton red"> > </a>
+
+    <ul style="color: #fff;">
+      <li ng-repeat="lcat in cats">
+        <h2>||lcat.cat|| </h2>
+        <div><input type="text" name="subcat" placeholder="SUBCATEGORIA" ng-model='lcat.subcat' class="lightinput" />
+            <a href="#" ng-click="addsubcat(lcat);$event.preventDefault();" class="boton red"> > </a>
+        </div>
+        
+        <ul>
+          <li ng-repeat="sc in lcat.cats">
+            <h4>||sc.catname||</h4>
+          </li>
+        </ul>
+
+      </li>
+    </ul>
+
+
+  </div>
+
+
+  <div class="col-md-8">
+    <div class="add_box">
+      <a href="#addRow" ng-click="genralmodule='gridbanco';columns=3;addGrid();$event.preventDefault();"><span class="lnr lnr-plus-circle"></span> Grid Imagenes</a>  
+    </div>
+
+
+
+    <!-- ROW FOR PAGE  -->
+    <ul id="main_box" ng-sortable="rowsSec"   ui-sortable="sortableOptions">
+      
+      <li ng-repeat="item in rowsSec" data-pk="||item.pk||" class="sortable-element" data-module="||item.modul||" style="background-color:#999;margin:2% 0%;">
+        <div class="ok_box">
+            
+            <div style="float:left;">
+            <a href="#hiderowbox" ng-hide="item.showbox" ng-click="item.showbox=true;$event.preventDefault();">
+              <span class="lnr lnr-chevron-down"></span>
+            </a>
+            <a href="#hiderowbox" ng-show="item.showbox" ng-click="item.showbox=false;$event.preventDefault();">
+              <span class="lnr lnr-chevron-up"></span>
+            </a>
+            </div>
+            <p class="name_module">  ||item.name_module||</p>
+            <div style="float:right;">
+            <a href="#links"  ng-click="slayed(this);$event.preventDefault();">
+              <span class="lnr lnr-trash"></span>
+            </a>  
+            </div>
+            <div style="clear:both;height:0px;"></div>
+        </div>
+
+        <div ng-show="item.showbox" ng-init="template=item.module" ng-include src="template"></div>
+      </li>
+    </ul>
+    </div>
+  </div>

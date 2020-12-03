@@ -1,0 +1,116 @@
+{% extends "mainapp/base.html" %}
+
+
+{%block content%}
+
+<!-- Modal -->
+<div class="modal fade" id="sendmailbox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Enviar Link</h4>
+      </div>
+      <div class="modal-body">
+		
+		<form action="/sender" method="post" class="submiter" >
+		<p>Puedes copiar la siguiente liga: 
+		<br>
+		<a href="#link" id="ligalink"></a></p>
+		<p>O especifica aquí tu nombre y el correo del destinatario:</p>
+		<div><input type="text" name="nombre_envio" placeholder="nombre" required="required" /></div><br>
+        <div><input type="email" name="correo_envio" placeholder="Escirba el email" required="required"/></div>
+        </form>
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="enviando();">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- END MODAL -->
+
+	<div>
+	<div class="pleca-imagen" style="background-image:url('{{section.webimage}}');"></div>
+	<div class="pleca-img-head"></div>
+	<div class="pleca-img-text">
+		<h1 class="title">{{section.sec_name}}</h1>
+	</div>
+	<div class="{{section.page_type}} boxtop" style="">&nbsp;</div>
+	</div>
+
+
+
+<section id="mainbox_home" class="container">
+{% for rw in section.rowssecs %}
+	{% if section.page_type in 'bancoimagen' %}
+		{% if rw.module %}
+	    {% with template_name=rw.module|stringformat:"s"|add:".html" %}
+	        {% include "mainapp/"|add:template_name %}
+	    {% endwith %}
+		{% endif %}
+
+	{% else %}
+	<div class="row {{rw.module}}">
+		{% if rw.module and rw.publicado %}
+	    {% with template_name=rw.module|stringformat:"s"|add:".html" %}
+	        {% include "mainapp/"|add:template_name %}
+	    {% endwith %}
+		{% endif %}
+	</div>
+	{% endif %}
+{% endfor %}
+</section>
+
+
+
+
+{%endblock%}
+
+
+{% block extrajs %}
+<script type="text/javascript" src="/static/js/jquery.localscroll-1.2.7-min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.scrollTo-1.4.2-min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+
+		{% for pheres in section.spheres %}
+			{% for box in pheres.mediasection_set.all %}
+		      //sphere
+		      div = document.getElementById('pk_{{box.pk}}');
+		      var PSV = new PhotoSphereViewer({
+		          panorama: '/{{box.webimage}}',
+		          container: div,
+		          
+		          time_anim: 3000,
+		          caption:'{{box.title}}',
+		          navbar:['autorotate','zoom'],
+		          navbar_style: {
+		            backgroundColor: 'rgba(58, 67, 77, 0.7)'
+		          },
+		        });
+
+		          //sphere
+        	{% endfor %} 
+		{% endfor %}
+
+
+		$('#videobox').on('show.bs.modal', function (e) {
+				jsplayer.play();
+		})
+
+		$('#videobox').on('hide.bs.modal', function (e) {
+				jsplayer.pause();
+		})
+
+
+
+
+	});
+</script>
+
+{% endblock %}

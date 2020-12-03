@@ -1,0 +1,261 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Claro Manual</title>
+        <meta name="theme-color" content="#496201">
+        
+        <!-- core CSS -->
+        <link href="/static/css/bootstrap.css" rel="stylesheet">
+        <link href="/static/css/clarofuentes.css" rel="stylesheet">
+        <link href="/static/css/vfonts.css" rel="stylesheet">
+        <link href="/static/css/defaults.css" rel="stylesheet">
+        {%block extras%}{%endblock%}
+        </head>
+    <body>
+    
+
+ 
+    <div id="wrapper" ng-app='mainApp' style="height:auto;min-height:100%;width: 100%;">
+
+        <nav class="navbar navbar-default navbar-fixed-top" ng-controller="treeCtr">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">&nbsp;</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">
+                  <img src="/static/imgs/logo.svg" style="height:90%;" />
+              </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                <li class="dropdown" ng-repeat="item in list" class="parent">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" 
+                  role="button" aria-haspopup="true" aria-expanded="false">
+                    ||item.title||
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li ng-repeat="sitem in item.nodes" class="sons"><a href="/section/||sitem.sec_slug||/">||sitem.title||</a></li>
+                  </ul>
+                </li>
+              </ul>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">s <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#">Separated link</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+            {% block content %}{% endblock %}
+    </div>
+    <!-- /#wrapper -->
+
+
+        <!--  JS  -->
+        <script src="/static/js/jquery.js"></script>
+        <script src="/static/js/jquery-ui.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/moment.js"></script>
+        <script src="/static/js/bootstrap-datetimepicker.min.js"></script>        
+        <script src="/static/js/chumbucket.js"></script>
+        <script src="/static/js/angular.min.js"></script>
+        <script src="/static/js/angular-route.min.js"></script>
+        <script src="/static/crop/ng-img-crop.js"></script>
+
+        <script type="text/javascript">
+
+
+            jQuery.extend({
+                postValues: function(url,data) {
+                    var result = null;
+                    $.ajax({
+                        url: url,
+                        data:data,
+                        type: 'post',
+                        dataType: 'json',
+                        async: false,
+                        success: function(data) {
+                            result = data;
+                        }
+                    });
+                   return result;
+                }
+            });           
+            var myapp = angular.module('mainApp',['ngRoute','ngImgCrop']);
+            var customInterpolationApp = angular.module('customInterpolationApp', []);
+            myapp.config(function($interpolateProvider) {
+                $interpolateProvider.startSymbol('||');
+                $interpolateProvider.endSymbol('||');
+            });
+
+
+
+
+            myapp.directive('focusOnShow', function($timeout) {
+                return {
+                    restrict: 'A',
+                    link: function($scope, $element, $attr) {
+                        if ($attr.ngShow){
+                            $scope.$watch($attr.ngShow, function(newValue){
+                                if(newValue){
+                                    $timeout(function(){
+                                        $element[0].focus();
+                                    }, 0);
+                                }
+                            })      
+                        }
+                        if ($attr.ngHide){
+                            $scope.$watch($attr.ngHide, function(newValue){
+                                if(!newValue){
+                                    $timeout(function(){
+                                        $element[0].focus();
+                                    }, 0);
+                                }
+                            })      
+                        }
+
+                    }
+                };
+            });
+
+             try
+             {
+                myapp.controller('treeCtr',function($scope,$http){
+
+                  
+                $http.get("{% url 'secciones' %}").then(function(response){
+                    $scope.list = response.data;
+                });
+
+
+                $scope.editandoGon = function(){
+
+                    elem = this;
+
+
+                    data = {'pk':elem.ssitem.pk,
+                            'parent':elem.sitem.pk,
+                            'orden':elem.$index,
+                            'sec_name':elem.ssitem.title,
+                            'csrfmiddlewaretoken':'{{csrf_token}}'
+                        };
+                    uriz = "{% url 'addsection' %}";
+                    pardo = jQuery.postValues(uriz,data);
+                    elem.ssitem.pk = pardo.datos.pk;
+
+                }
+
+
+                $scope.editandoSon = function(elem){
+
+                    data = {'pk':elem.sitem.pk,
+                            'parent':elem.item.pk,
+                            'orden':elem.$index,
+                            'sec_name':elem.sitem.title,
+                            'csrfmiddlewaretoken':'{{csrf_token}}'
+                        };
+                    uriz = "{% url 'addsection' %}";
+                    pardo = jQuery.postValues(uriz,data);
+                    elem.sitem.pk = pardo.datos.pk;
+
+                }
+
+
+                  $scope.editando = function(elem){
+                    data = {'pk':elem.item.pk,
+                            'orden':elem.$index,
+                            'sec_name':elem.item.title,
+                            'csrfmiddlewaretoken':'{{csrf_token}}'
+                        };
+                    uriz = "{% url 'addsection' %}";
+                    pardo = jQuery.postValues(uriz,data);
+                    elem.item.pk = pardo.datos.pk;
+
+                  }
+
+                   $scope.addItem = function(){
+                    $scope.list.push({'title':'Nombre','nodes':[]});
+
+
+                   }
+
+                   $scope.addson=function(ite){
+                    ite.nodes.push({'title':'Son of','nodes':[]});
+                    $scope.mysons = true;
+                   }
+
+                   $scope.reorder=function(){
+                        pks = [];
+                        orders = [];
+
+                        angular.forEach($scope.list,function(x){
+                            //console.log(x);
+                            dato = x.pk+'|'+x.orden;
+                            pks.push(dato);
+                        });
+
+
+                        data = {'pks':pks};
+                        //console.log(data);
+                        
+                        $http({url:"{% url 'addsection' %}",
+                               params:data,
+                               method:'GET'}).then(function(response){
+                        });
+                        
+
+
+                    }
+
+
+                 });
+
+
+              
+            }
+            catch(err){
+              console.log('No hay app');
+            }
+            
+
+        </script>
+
+
+        
+        <script type="text/javascript">
+            
+            $(document).ready(function () {
+
+
+            });            
+
+
+        </script>
+        {% block extrajs %}{% endblock %}
+
+
+
+
+    </body>
+
+</html>

@@ -1,0 +1,41 @@
+
+
+
+  <h1>LINK SECTION FORM MORE INFO PLEASE ...</h1>
+  <section style="padding:10px 2%;">
+    <div class="add_box">
+      <a href="#agregar" id="masbox" class="vectorbtn" ng-click="addBox(this);$event.preventDefault();">
+        <span class="lnr lnr-plus-circle"></span>
+      </a>  
+    </div>
+    <div class="row" >
+      <div class="col-sm-3 col-md-3 varito" ng-repeat="box in boxes">
+        <div class="thumbnail">
+            <div class="ok_l_box" style="position:absolute;width:10% !important;">
+              <a href="#links" class="vectorbtn" ng-click="changeme(this);micro=true;">
+                <span class="lnr lnr-camera"></span>
+              </a>
+            </div>
+              <div class="ok_box">
+                <a href="#links"  ng-click="slayed(box);$event.preventDefault();">
+                  <span class="lnr lnr-cross-circle"></span>
+                </a>  
+              </div>
+              <div class="cropArea" ng-show="micro" style="position:absolute;left:12%;">
+                <img-crop image="myImage" image="||box.src||" area-type="square" result-image="box.src"></img-crop>
+              </div>
+            <img ng-show="vi" ng-src="||box.src||" src="||box.src||" class="img-thumbnail changeme" alt="doctor" width="100%">
+            <img ng-hide="vi" src="||box.prevy||" width="100%" />
+            
+            <div class="link_box_admin">
+              <span class="lnr lnr-link"></span>
+              <input type="text" name="link_box" ng-model="box.link"  class="lightinput" value="||box.link||" />              
+            </div>
+            <div class="ok_box">
+              <a href="#links" ng-show="box.link" ng-click="save_link(this);micro=false;"><span class="lnr lnr-checkmark-circle"></span></a>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+

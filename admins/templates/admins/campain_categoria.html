@@ -1,0 +1,174 @@
+{% extends "admins/base.html" %}
+
+
+
+{%block content%}
+<section id="controlador" class="container-fluid" ng-controller="catsCtr">
+
+	<h1 class="secnamet">Portafolio de campañas</h1>
+  <hr/>
+
+
+<div class="row">
+
+	<div class="col-xs-4 col-sm-4 col-lg-4 col-md-4" >
+	
+		<h2>Clasificación</h2>
+		<hr/>
+        <div style="margin-top:20px;">
+         
+            <div>
+
+
+
+              <div>
+                  <div class="lb" style="width:70%;vertical-align: top;padding:0px;">
+                    <input type="text" ng-model="newcatname" name="itemcat" placeholder="NEUVA CATEGORIA" class="tinybox lb" style="width: 103%;padding: 0px;" />
+                  </div>
+                  <div class="lb">
+                  <a href="#" class="boton red" ng-click="addcat();"> + </a>
+                  </div>
+              </div>
+              <ul>
+              	
+                <li  style="margin-top: 20px;" ng-repeat="c in cats">
+                  <div>
+                  <div class="lb">
+                  <a href="#killcat" class="boton red" ng-click="kicat();"> x </a>
+                  </div>
+                  
+                  <h4 style="cursor: pointer;" class="lb">
+                  		||c.name||
+                   </h4>
+                  
+                  <div  class="lb" style="vertical-align: top;width: 70%;" ng-show="editando">
+                    <input type="text" ng-model="lcat.cat" class="tinybox" style="width:50%;" />
+                  </div>
+                  
+                  </div>
+                  <div>
+
+                    <div class="lb" style="width: 70%;vertical-align: top;">
+                      <input type="text" ng-model="newsubc" name="subcat" placeholder="SUBCATEGORIA"  class="tinybox" style="width: 103%"  />
+                    </div>
+                    <div class="lb" >
+                      <a href="#"  class="boton red" ng-click="addsub();"> + </a>
+                    </div>
+
+                  </div>
+                  
+                  <ul style="border-bottom:1px dotted #333;margin-top: 20px;">
+                    <li ng-repeat="sc in c.subs">
+                      <div class="lb">
+                        <a href="#killcat" class="boton red" ng-click="subkicat();"> x </a>
+                      </div>
+                      <h5 class="lb"  style="cursor: pointer;">
+                      	||sc.name||
+                  	  </h5>
+                      <div ng-show="sc.editor" class="lb" style="vertical-align: top;width: 78%;">
+                        <input type="text" ng-model="sc.catname" class="tinybox" style="width:50%;" />
+                      </div>
+                    </li>
+                  </ul>
+
+                </li>
+                
+
+
+              </ul>
+            </div>
+        </div>
+	</div>
+
+
+  <div class="col-xs-8 col-sm-8 col-lg-8 col-md-8" >
+
+
+  <form action="{% url 'campanyaportada' %}"
+        class="dropzone"
+        id="my-awesome-dropzone" style="height:100%;">
+        <div class="dz-message">
+          <p><span class="lnr lnr-exit-up" style="font-size: 3rem;"></span></p>
+          <p>Arrastra aquí o da click para subir la Imagen de portada</p>
+        </div>
+        {% csrf_token %}
+        <div class="dz-filename"><span data-dz-name></span></div>
+    </form>
+    {% if pages %}
+
+    <img src="/{{pages.imagen.url}}" ng-hide="portada" style="width:100%;" />
+    <img src="||portada||" ng-if="portada" style="width:100%;" />
+    {% endif %}
+  </div>
+
+</div>
+
+
+
+
+</section>
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+{% block extrajs %}
+
+
+        <script src='/static/js/backend/cats_ctr.js'></script>
+
+
+        <script type="text/javascript">
+                  
+          Dropzone.options.myAwesomeDropzone = {
+              addRemoveLinks:false,
+              maxFilesize: 800, // MB
+              clickable:true,
+              acceptedFiles:'image/*',
+              accept: function(file, done,response) {
+                console.log(response);
+                done();
+              },
+              init: function () {
+                  var myDropzone = this;
+
+                },
+              removedfile:function(elemento){
+
+                var elemento = elemento;
+              },
+              success: function(file, response){
+                console.log(response);
+                controlador = $('#controlador');
+                  contro = angular.element(controlador).scope();
+                  contro.portada = '/'+response.img;
+                  contro.$apply();
+                  $('.dz-complete').hide(400);
+                  this.removeAllFiles();
+
+              },
+              queuecomplete:function(file,response){
+                  
+                  this.removeAllFiles();
+                  
+              }
+            };
+
+
+        </script>
+
+{% csrf_token %}
+
+
+
+
+
+
+
+{% endblock %}

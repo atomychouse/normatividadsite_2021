@@ -1,0 +1,5 @@
+{% for box in rw.textmodule_set.all %}
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="textmodule_box">{{box.texto|safe}}</div>
+	</div>
+{% endfor %}		

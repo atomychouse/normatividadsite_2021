@@ -1,0 +1,143 @@
+  <select name="columns" ng-model="item.columns"   style="color:#000;display: none;">
+    <option value="12">1</option>
+    <option value="6">2</option>
+    <option value="4">3</option>
+  </select>
+  <section style="margin-top: 40px;" class="siderow">
+
+    <div class="row siderow">
+      <div class="col-sm-||item.columns|| col-md-||item.columns|| varito" style="margin-bottom: 40px;" 
+           ng-repeat="box in item.nodeses" ng-init="item.columns=12" >
+        
+              <table style="width:100%;margin-bottom:20px;">
+                <tr>
+                  <td style="text-align: left;vertical-align:middle;">
+                    
+                    <a href="#links" class="ok_box_rojo_btn"  ng-click="changeme(this);micro=true;" style="margin-right:5px;">
+                      <span class="lnr lnr-camera"></span>
+                    </a>
+                    <a href="#" class="ok_box_rex_btn" ng-class="{robir:||box.imagesize||==12}" ng-click="box.imagesize=12;box.textsize=83;$event.preventDefault();">15%</a>
+                    <a href="#" class="ok_box_rex_btn" ng-class="{robir:||box.imagesize||==22}" ng-click="box.imagesize=22;box.textsize=70;$event.preventDefault();">30%</a>
+                    <a href="#" class="ok_box_rex_btn" ng-class="{robir:||box.imagesize||==48}" ng-click="box.imagesize=48;box.textsize=48;$event.preventDefault();">50%</a>
+                    <a href="#" class="ok_box_rex_btn" ng-class="{robir:||box.imagesize||==70}" ng-click="box.imagesize=70;box.textsize=22;$event.preventDefault();">75%</a>
+                    <a href="#" class="ok_box_rex_btn" ng-show="derecha" ng-click="box.flotando='right';box.invflotando='left';$event.preventDefault();derecha=false;"> > </a>
+                      
+                      <a href="#" class="ok_box_rex_btn robir" style="margin-left:5px;" ng-hide="derecha" ng-click="box.flotando='left';box.invflotando='right';$event.preventDefault();derecha=true;"> < </a>
+                  </td>
+                  
+                  <td style="text-align: right;">
+                  <a href="#links" class="ok_box_gris"
+                    ng-click="remove_imagenlarga($event,this);">
+                    x
+                  </a>  
+
+                  </td>                    
+                </tr>
+                </table>
+
+
+
+        <div class="" style="text-align: center;">
+
+
+
+              <ul class="row">
+
+                <li style="width:||box.imagesize||%;text-align:left;float:||box.flotando||;position: relative;" >
+
+
+                    <img ng-show="vi" ng-src="||box.src||"  class="img-responsive changeme" />
+                    <img ng-hide="vi" ng-src="||box.prevy||" class="img-responsive" />
+
+
+                </li>
+                <li style="width:||box.textsize||%;float:||box.invflotando||;">
+                  
+                  <input type="text" ng-model="box.title" class="lightinput" placeholder="titulo" style="width:100%;margin-bottom:10px;"  />
+                  <textarea ng-model="box.texto" class="lightinput" placeholder="contenido" rows="6" style="width:100%;" ></textarea>
+                  
+
+
+
+                </li>
+                <li style="clear:both;height:0px;"></li>
+                <li>
+                    <div class="link_box_admin">
+                    
+                    <table style="margin-top:20px;"> 
+                    <tr ng-if="box.downlink.length<1">
+                      <td colspan="7" style="text-align: left;padding-left: 2px;">
+                         <a class="ga-sm-plus  ga6 red" href="#as" ng-click="addDownloadcolumn($event,this,'link');">
+                         <span class="lnr lnr-file-empty"></span></a>
+                      </td>
+                    </tr>
+                    <tr class="downloadmenu" ng-repeat='dl in box.downlink'>
+                      <td>
+                         <a class="ga-sm-plus  ga6 red" href="#as" ng-click="addDownloadcolumn($event,this,'link');">
+                         <span class="lnr lnr-file-empty" style="font-size: 17px;"></span></a>
+                      </td>
+                      <td style="width:190px;">
+                      <input type="text" class="tinybox" ng-model="dl.down_file" placeholder="archivo" required="required" ng-click="cambiale(this,dl);" readonly="readonly" style="width:75%;" />
+                      <a class="ga-sm ga6" ng-click="cambiale(this,dl);" style="margin:0px -3px !important">+</a>
+                        
+
+                      </td>
+                      <td style="width:182px; text-align: left;">                        
+                      <a href="#descarga" class="ga-sm-plus  ga6" ng-click="settypel($event,dl,'download');save_downloadlink($event,this,'grid');" ng-class="{'red' : dl.type_link=='download'}">Descarga</a>
+                      <a href="#link" class="ga-sm-plus ga6" ng-class="{'red' : dl.type_link=='link'}"  ng-click="settypel($event,dl,'link');save_downloadlink($event,this,'grid');">Link</a>
+                      <a href="#Enviar" class="ga-sm-plus ga6"  ng-click="dl.sending = !dl.sending;save_downloadlink($event,this,'grid');" ng-class="{'red' : dl.sending}">
+                      <span class="glyphicon glyphicon-envelope"></span>
+                      </a>
+                      <input type="hidden" class="tinybox lb" ng-model="dl.type_link"   />
+                      <input type="hidden" class="tinybox lb" ng-model="dl.sending"   />
+                      </td>
+                      <td style="width:225px;">
+                      <input type="text" class="tinybox lb" style="width:100%;" ng-model="dl.down_title" placeholder="TÍTULO" required="required"  />
+                      </td>
+                      <td>
+                        <a href="#links" class="ga-sm ga6" style="font-weight: bolder;" ng-click="remove_downloadlink($event,this,'grid');">
+                          x
+                        </a>
+                      <span style="width:0px;overflow:hidden;clear: both;">&nbsp;</span>
+
+                         <div class="addy_box" style="display: none;">
+
+                          <a href="#links" ng-click="save_downloadlink($event,this,'grid');">
+                            <span class="lnr lnr-checkmark-circle"></span>
+                          </a>
+                            <input type="checkbox" name="sending" ng-model="dl.sending">
+                        </div>
+
+
+                      </td>
+                      </tr>
+                      </table>
+                      
+
+
+                      </div>
+
+
+                 
+                </li>
+            </ul>
+            <div style="text-align: right;">
+              <a href="#links" ng-click="save_link($event,this);micro=false;" class="ok_box_gris">
+                <img src="/static/imgs/check.png" />
+              </a>
+            </div>
+      </div>
+
+        <div class="ok_box_red_left" ng-if="$last">
+          <a href="#agregar" id="masbox" ng-click="addBox($event,this);">
+            +
+          </a>  
+        </div>
+
+      
+    </div>
+
+    </div>
+
+  </section>
+

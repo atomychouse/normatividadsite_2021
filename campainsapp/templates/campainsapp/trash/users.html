@@ -1,0 +1,169 @@
+{% extends "admins/base.html" %}
+
+
+
+{%block content%}
+
+<section class="container-fluid">
+
+<div style="padding:0px 2%" >
+	<h1>USUARIOS</h1>
+	<hr/>
+	<div class="lb mycol-2 titletable">
+		<span class="lb mycol-7">Grupos</span>
+	</div>
+	<div class="lb titletable" style="width:79%;">
+		<div style="float: left;">Usuarios</div>
+		<div  style="float: right;margin-right:7px;padding-top: 4px;"> <a href="/admin/user/" class="ok_box_grey_left" style="color:#fff;">+</a> </div>
+		<div style="clear: both;height: 0px;width: 0px;overflow: hidden;">&nbsp;</div>
+	</div>
+
+	<div class="lb mycol-2" style="margin-right:10px;">
+
+
+
+		<div style="padding: 12px 5px;">PERMISOS</div>
+		{% for g in grupos %}
+		<div class="userslist">
+			<a href="/admin/grupo/{{g.pk}}/" style="color: #fff;padding-top: 12px;">{{g.name}}</a>
+		</div>
+		{% endfor %}
+
+		<div style="width: 100%;text-align:left;">
+			<a href="#/admin/grupo/" ng-hide="showgform" ng-click="showgform=true;"  class="addgrupo ok_box_red_btn"> + </a> 
+		 	<a href="#/admin/grupo/" ng-show="showgform" style="color: #fff;" ng-click="showgform=false;" class="addgrupo ok_box_red_btn"> - </a> 
+		</div>
+
+
+		<div ng-show="showgform" style="vertical-align: middle;">
+			<input  type="text" class="form-control" style="width:84% !important;float:left;padding:3px 10px;" name="grupo" placeholder="Nombre del Grupo"></input>
+			<a href="#links"  class="savegroup ok_box_grey_left" style="float:right;margin-top:13px;">
+        		+
+      		</a>
+      		<span style="clear: both;"></span>
+		</div>
+
+	</div>
+
+	<div class="lb" style="vertical-align:top;width:78%;">
+
+			<form name="userform" action="/admin/user/" method="post" id="userform"> 
+			<input type="hidden" name="pk" >
+			{% csrf_token %}
+				<div style="padding:2px 0px  2px 12px;margin: 0px;">
+					<div>
+						<ul class="userlist" style="display: table;width: 100%;height: 100%;">
+							{% for u in users %}
+							<li class="" style="display: table-row;">
+								<div class="" style="font-size: 18px;display: table-cell;">{{u.first_name}}</div>
+								<div class="" style="font-size:18px;display: table-cell;">{{u.email}}</div>
+								<div class="" style="display: table-cell;">
+									<select name="ugroup" class="mygroup form-control" style="width:100%;padding:2px !important;" data-pk='{{u.pk}}'>
+										{% for g in grupos %}
+										<option value="{{g.name}}" {% ifequal  g.name u.groups.all.0.name  %}selected="selected" {% endifequal %}>{{g.name}}</option>
+										{% endfor%}
+									</select>
+								</div>
+								<div class="" style="display: table-cell;text-align: right;">
+								<a href="#edit" class="editor ok_box_grey_left" style="height: 26px;" data-user="{{u.pk}}">
+								<span class="lnr lnr-pencil" style="padding:5px 0px 1px 0px;font-size: 16px;"></span></a>
+									<a href="#delete" class="deleteuser ok_box_grey_left" data-u="{{u.pk}}">
+										x </a> 
+								</div>
+							</li>
+							{% endfor %}
+							
+						</ul>
+					</div>
+				</div>
+
+			</form>
+
+
+	</div>
+</div>
+
+
+</section>
+
+{%endblock%}
+
+
+
+
+{% block extrajs %}
+
+
+
+<script type="text/javascript">
+
+function deluser(e){
+	e.preventDefault();
+	if(confirm('¿Desea eliminar permanentemente este regirstro?')){
+	removed = $(this).attr('data-u');
+	data = {'step':'4','pku':removed,'csrfmiddlewaretoken':'{{csrf_token}}'}
+	$.ajax({url:'/admin/remover/',
+			type:'POST',
+			data:data,
+			dataType:'json',
+			success:function(response){
+				toastr('success','eliminado');
+
+			}
+		});
+	$(this).parents('li:first').remove();
+	}
+}
+
+
+
+
+function chggroup(){
+	
+	var groupname = $(this).val();
+	var pk = $(this).attr('data-pk');
+	var data = {grupo:groupname,pk:pk};
+	$.ajax({url:'/admin/chgroup/',
+			type:'get',
+			data:data,
+			success:function(response){
+				toastr('success','Usuario cambio al grupo '+groupname);
+			}
+		});
+
+}
+
+
+function addgroup(){
+	var groupname = $('[name="grupo"]').val();
+	$.ajax({url:'/admin/addgroup/',
+ 			type:'get',
+			data:{'name':groupname},
+ 			success:function(response){
+				window.location.reload();
+ 			}
+ 		});
+}
+
+
+	$(document).ready(function(){
+
+		$('.deleteuser').click(deluser);
+		$('.mygroup').change(chggroup);
+
+		$('.editor').click(function(e){
+			e.preventDefault();
+			valor = $(this).attr('data-user');
+			$('[name="pk"]').val(valor);
+			$('#userform').submit();
+
+		});
+
+		$('.savegroup').click(addgroup);
+
+	});
+</script>
+
+
+
+{% endblock%}

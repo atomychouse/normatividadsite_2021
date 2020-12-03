@@ -1,0 +1,115 @@
+{% extends "admins/base.html" %}
+
+
+
+{%block content%}
+<section class="container-fluid" ng-controller="catsCtr">
+
+	<h1 class="secnamet">Portafolio de campañas</h1>
+  <hr/>
+
+
+<div class="row">
+
+	<div class="col-xs-6 col-sm-4 col-lg-4 col-md-4" >
+	
+		<h2>Clasificación</h2>
+		<hr/>
+        <div style="margin-top:20px;">
+         
+            <div>
+
+
+
+              <div>
+                  <div class="lb" style="width:70%;vertical-align: top;padding:0px;">
+                    <input type="text" ng-model="newcatname" name="itemcat" placeholder="NEUVA CATEGORIA" class="tinybox lb" style="width: 103%;padding: 0px;" />
+                  </div>
+                  <div class="lb">
+                  <a href="#" class="boton red" ng-click="addcat();"> + </a>
+                  </div>
+              </div>
+              <ul>
+              	
+                <li  style="margin-top: 20px;" ng-repeat="c in cats">
+                  <div>
+                  <div class="lb">
+                  <a href="#killcat" class="boton red" ng-click="kicat();"> x </a>
+                  </div>
+                  
+                  <h4 style="cursor: pointer;" class="lb">
+                  		||c.name||
+                   </h4>
+                  
+                  <div  class="lb" style="vertical-align: top;width: 70%;" ng-show="editando">
+                    <input type="text" ng-model="lcat.cat" class="tinybox" style="width:50%;" />
+                  </div>
+                  
+                  </div>
+                  <div>
+
+                    <div class="lb" style="width: 70%;vertical-align: top;">
+                      <input type="text" ng-model="newsubc" name="subcat" placeholder="SUBCATEGORIA"  class="tinybox" style="width: 103%"  />
+                    </div>
+                    <div class="lb" >
+                      <a href="#"  class="boton red" ng-click="addsub();"> + </a>
+                    </div>
+
+                  </div>
+                  
+                  <ul style="border-bottom:1px dotted #333;margin-top: 20px;">
+                    <li ng-repeat="sc in c.subs">
+                      <div class="lb">
+                        <a href="#killcat" class="boton red" ng-click="subkicat();"> x </a>
+                      </div>
+                      <h5 class="lb"  style="cursor: pointer;">
+                      	||sc.name||
+                  	  </h5>
+                      <div ng-show="sc.editor" class="lb" style="vertical-align: top;width: 78%;">
+                        <input type="text" ng-model="sc.catname" class="tinybox" style="width:50%;" />
+                      </div>
+                    </li>
+                  </ul>
+
+                </li>
+                
+
+
+              </ul>
+            </div>
+        </div>
+	</div>
+
+
+</div>
+
+
+
+
+</section>
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+{% block extrajs %}
+
+
+        <script src='/static/js/backend/cats_ctr.js'></script>
+
+
+{% csrf_token %}
+
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,88 @@
+<section ng-controller="externoCtr" id="boexexterno">
+
+    <div class="row">
+      <div class="col-sm-12 col-md-12" ng-repeat="box in item.nodeses" style="margin-bottom: 40px;">
+      <br/><br>
+
+
+      <div style="text-align: right;position: relative;height: 0px;">
+        <a href="#links"  ng-click="rmmodulo();" class="boton dgris">
+          x
+        </a>  
+      </div>
+
+
+
+    <form action="/admin/saveexterno/"
+        class="dropzone"
+        id="my-externo" style="height:100%;">
+        <div class="dz-message">
+          <p><span class="lnr lnr-exit-up" style="font-size: 3rem;"></span></p>
+          <p>Arrastra aquí o da click para subir los archivos que deseas publicar</p>
+        </div>
+        <input type="hidden" name="pais" id="pais">
+        <input type="hidden" name="producto" id="producto">
+        <input type="hidden" name="temporalidad" id="temporalidad">
+        <input type="hidden" name="anyo" id="anyo">
+        {% csrf_token %}
+        <div class="dz-filename"><span data-dz-name></span></div>
+        <input type="hidden" id="rowpkexterno" name="rowpk" value="||item.pk||" />
+        <input type="hidden" name="typofile" value="headfile">
+    </form>
+
+
+    <div style="margin:20px 0px;">
+      <ul>
+        <li ng-repeat="exs in externos" style="border-bottom: 1px dotted black;background:#ececec;margin:5px 0px;padding:20px;">
+          <div>name:<b>||exs.originalname||</b></div>
+          <div>path:<b>/||exs.path||</b></div>
+          <div>type:<b>||exs.typo||</b></div>
+          <div style="text-align:right; ">
+              <span class="boton dgris" style="cursor: pointer;" ng-click="rmext(exs.pk);">X</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+
+
+
+
+
+      </div>
+    </div>
+
+
+    <div id="boxbox"></div>
+
+
+
+</section>
+
+
+
+
+{% block extrajs %}
+
+
+ 
+<script type="text/javascript">
+  
+
+
+  function newexterno(data){
+
+    console.log(data);
+    $('[name="modulopk"]').val(data.pk);
+    $('#boxbox').load('/'+data.filepath);
+
+
+  }
+
+
+
+
+</script>
+
+
+{% endblock %}

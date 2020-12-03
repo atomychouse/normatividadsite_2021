@@ -1,0 +1,74 @@
+
+{% if not section.parent %}
+<div>
+<h2>Menu de categorias y posiciones</h2>
+</div>
+
+<form name="addcategoria" method="post" action="addcat">
+
+
+</form>
+
+<ul class="mainmenu">
+<li>
+	<div class="add_box">
+		<a href="#ADDROW" ng-click="cat_addrow(this);"><span class="lnr lnr-plus-circle"></span>row</a>
+	</div>
+</li>
+	<li ng-repeat='row in rows' class="row rowmenu" data-pk="||row.rowpk||">
+			<div class="add_box">
+				<a href="#slayrow" 
+				   itle="Warning,Elimina el renglon y todo su contenido de mdo permanente :O" ng-click="slayrow($event,row);"><span class="lnr lnr-trash"></span>row</a> |
+				<a href="#ADDROW" ng-click="cat_addcol(this);"><span class="lnr lnr-plus-circle"></span>col to row</a>
+			</div>
+
+		<div class="col-md-2 col-sm-2 col-xs-2 separator" ng-repeat="col in row.cols">
+			<p class="add_box"><a href="#slayrow" 
+				   itle="Warning,Elimina el renglon y todo su contenido de mdo permanente :O" ng-click="slaycol($event,this);"><span class="lnr lnr-trash"></span></a></p>
+			<input type="text" ng-model="col.col_name" class="lightinputcfg input_cat_name" />
+			<a href="#savecol" ng-click="savecol($event,this);" class="btn"><span class="lnr lnr-checkmark-circle"></span></a>
+			<div class="add_box" ng-if="col.pk">
+				<a href="#col" ng-click="cat_addsec($event,this);"><span class="lnr lnr-plus-circle"></span>section</a>
+			</div>
+			<ul ng-if="col.pk">
+				<li ng-repeat="sec in col.sections">
+					<input type="text" ng-model="sec.sec_name" class="lightinputcfg" />
+					<a href="#savesection" class="btn" ng-click="savesec($event,this);"><span class="lnr lnr-checkmark-circle"></span></a>
+				</li>
+			</ul>
+		</div>
+	</li>
+</ul>
+{%endif%}
+
+
+<script type="text/javascript">
+	
+
+	var initialrows = [];
+	{% for r in section.secrowmenu_set.all %}
+		cols = [];
+
+		{% for c in r.seccolmenu_set.all %}
+			sections = [];
+			{% for s in c.section_set.all %}
+				sections.push({'sec_name':'{{s.sec_name}}',
+							   'pk':'{{s.pk}}',
+							   'orden':'{{s.orden}}'
+				});
+			{% endfor %}
+
+			cols.push({'col_name':'{{c.col_name}}','orden':'{{c.orden}}','pk':'{{c.pk}}','sections':sections});
+		{% endfor %}
+
+		initialrows.push({'rowpk':'{{r.pk}}',
+						  'orden':'{{r.orden}}',
+						  'secpk':'{{section.pk}}',
+						  'cat_name':'category name',
+					  	  'cols':cols
+						});
+	{% endfor%}
+
+	var sectionpk = '{{section.pk}}';
+	var tk = '{{csrf_token}}';
+</script>

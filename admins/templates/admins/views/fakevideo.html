@@ -1,0 +1,152 @@
+<style type="text/css">
+
+
+input{
+	background:none !important;
+}
+
+.form-uncontrol{
+	border-bottom: 1px dotted black;width: 100%;
+	font-size: 3vmin;font-weight: bold;
+	padding: 2%;
+	background-color: none !important;
+	color:#FFF;
+}
+
+</style>
+
+
+<div class="embed-responsive embed-responsive-16by9" style="width:40%;height:40%;margin: auto;">
+  <youtube-video class="embed-responsive-item" id="videoplaying" video-id="theBestVideo"></youtube-video>
+</div>
+
+
+<div>
+	<span>Add Carousel Image</span>
+
+	<a href="#addimagecarousel" class="vectorbtn addcarousel"><span class="lnr lnr-camera"></span></a> 
+	<input type="text" name="urlvideo" id="urlvideo" />
+	
+
+</div>
+
+
+
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+
+	<section id="carousel_sec">
+
+		  <!-- Wrapper for slides -->
+		  <div class="carousel-inner" role="listbox">
+		    
+		    <div class="item active" onclick="changevideo(this);">
+		      <a href="#changevideo" >
+		      	<img src="http://img.youtube.com/vi/ru-pVDLa0r4/0.jpg" alt="Verush" >
+		      </a>
+		      <!-- <div class="carousel-caption">
+		        TEXTO
+		      </div>-->
+		    </div>
+
+		  </div>
+
+
+		  <!-- Controls -->
+		  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+		    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+		    <span class="sr-only">Previous</span>
+		  </a>
+		  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+		    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+		    <span class="sr-only">Next</span>
+		  </a>
+		
+	</section>
+</div>
+
+
+
+
+
+
+	<script type="text/javascript">
+
+	var previewer = null;
+
+	function changevideo(e){
+		console.log(e);
+		var video = $(e).attr('data-video');
+		if(video!='undefined'){
+			console.log(video);
+
+			scope = angular.element(document.getElementById("videoplaying")).scope();
+
+			scope.$apply(function() {
+			        scope.theBestVideo = video;
+			    });
+
+		}
+	}
+
+	$(document).ready(function(){
+
+
+		
+
+		$('#masbox').click(function(e){
+			e.preventDefault();
+			poper = $('.clonemaster:first').clone();
+			$(poper).find('img').attr('src','/static/imgs/foto.jpg');
+			$('.clonemaster:last').after(poper);
+
+
+		});
+
+		$('.addcarousel').click(function(e){
+			e.preventDefault();
+			cloner = $('#carousel_sec').find('.item:first').clone();
+			urlvideo = $('#urlvideo').val();
+			$('.item').removeClass('active');
+			
+			srcimage = 'http://img.youtube.com/vi/'+urlvideo+'/0.jpg';
+			$(cloner).find('img').addClass('active img-responsive').attr('src',srcimage);
+			$(cloner).attr('data-video',urlvideo);
+			$('.carousel-inner').append(cloner);
+		});
+
+
+
+	});
+
+function changeme(e){
+			//previewer = $(this);
+			$(e).siblings('.prevs').click();
+}
+
+
+function killit(e){
+	existing = $('.clonemaster').length;
+	
+	if(existing>1)
+		$(e).parents('.clonemaster:first').remove();
+}
+
+function previewFile(e) {
+	var preview = $(e).siblings('.changeme');
+  	var file    = e.files[0];
+  	var reader  = new FileReader();
+
+	  reader.onloadend = function () {
+	    console.log(preview);
+	    $(preview).attr('src',reader.result);
+	    preview.src = reader.result;
+	  }
+
+	  if (file) {
+	    reader.readAsDataURL(file);
+	  } else {
+	    preview.src = "";
+	  }
+}
+
+	</script>

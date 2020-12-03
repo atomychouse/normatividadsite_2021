@@ -1,0 +1,220 @@
+{% extends "mainapp/base.html" %}
+
+{%block extras%}
+<link href="/static/css/campains.css" rel="stylesheet">
+{%endblock%}
+
+{%block content%}
+
+<section ng-controller="campsCtr" id="bancobox">
+
+	<div>
+		<div class="pleca-imagen" style="background-image:url('/{{head}}');background-position: center;"></div>
+		<div class="pleca-img-head"></div>
+		<div class="pleca-img-text">
+			<h1 class="title">Campañas</h1>
+		</div>
+		<div class="{{section.page_type}} boxtop" style="">&nbsp;</div>
+	</div>
+
+
+
+<div style="display: table;width:100%;height: 100%;margin-top:-53px;">
+	<div style="display: table-row;">
+		<div style="display: table-cell;width:20%;padding-top: 50px;position: relative;" class="bancomenu">
+			
+			<ul class="catmenu_banco">
+				{% for cat in cats %}
+				<li>
+					<h4 class="secnamebanco ng-binding">{{cat.namecat}}</h4>
+					<ul class="catmenu_banco">
+						{% for scat in cat.campaincat_set.all%}
+						<li>
+							<div>
+
+								<div style="display: inline-block;vertical-align: top;">
+									<input type="checkbox" name="cat" value="{{scat.pk}}" class="checat" />
+								</div>
+								<div  class="banco_txt">{{scat.namecat}}</div>
+							</div>
+						</li>
+						{% endfor%}
+					</ul>
+
+				</li>
+				{% endfor %}
+			</ul>
+
+			{% if 'campains' in groups %}
+			<div class="btn-back btn-regresaradmin">
+				<a href="/campains">Regresar al administrador</a>
+			</div>
+			{% endif %}
+
+		</div>
+		<div style="display: table-cell;width:80%;padding-top:50px;">
+
+			<div style="padding: 0px 20px;" class="camp_topbarbox">
+				<div class="left_top_bar">
+					<span class="clicable  blackfont filtrotypo" ng-click="destacados();">Destacados</span>
+					<span class="redfont">|</span>
+					<span class="clicable  redfont filtrotypo" ng-click="filtra('');" data-target="todos">Todos</span>
+					<span class="redfont">|</span>
+					<span ng-click="filtra('image');" class="clicable redfont filtrotypo" data-target="image">Imagen</span>
+					<span class="redfont">|</span>
+					<span ng-click="filtra('video');" class="clicable redfont filtrotypo" data-target="video">Video</span>
+				</div>
+				<div class="wboxchbx" style="padding:0px 10px;">
+					<span ng-click="filtra('status_pasada');" class="clicable" data-target="video">Pasadas</span>
+					<select id="ordered" name="filtrado" class="form-control" style="padding:0px;height:40px;">
+						<option value="">Ordenar por</option>
+						<option value="id">Más recientes primero</option>
+						<option value="-id">Más antiguos primero</option>
+					</select>	
+				</div>
+				<div class="cleaner_float"></div>
+			</div>
+
+
+				<section>
+					<div class="row cla">
+						<div ng-show="noseve" class="padings">No hay resultados</div>
+						<div class="col-xs-12 col-xl-2 col-sm-6 col-lg-3 col-md-4 allitem clicable" 
+						     ng-repeat="r in readys" style="margin:15px 0px;padding:0px 30px;position: relative;">
+							<div data-dw="||r.mini||" 
+								data-typofile="||r.typofile||" 
+								data-ext="||r.mini||" 
+								data-titulo="||r.titulo||" 
+								data-original="||r.original||" 
+								data-deskp="||r.desktop||" 
+								data-src="||r.mini||" 
+								data-pk="||r.pk||"
+								ng-click="openbox(r);"
+							    class="c_imagebox" 
+							    style="background:url('||r.mini||');background-size:cover;">&nbsp;</div>
+				            <div class="bottombarbar">||r.titulo||</div>
+				            
+				            </li>
+				            </ul>
+
+						</div>
+					</div>
+					<div style="text-align:center; " >
+						<span class="lnr lnr-arrow-left clicable " ng-click="prevp();">  </span>
+						<span style="display: inline-block;padding:5px;margin:1px;width:20px;" class="clicable" ng-click="pager(p);" ng-class="{curp:p==page}" ng-repeat="p in pages">||p||</span>
+						<span class="lnr lnr-arrow-right clicable " ng-click="nextp();">  </span>
+						
+					</div>
+
+				</section>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+<div id="cp_lightbox" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <button type="button" class="close " style="padding: 20px 5px;" data-dismiss="modal" aria-hidden="true">×</button>
+        <div class="modal-content">
+            <div class="modal-body">
+            	<button type="button" class="close " style="padding:5px 0px  20px 5px;" data-dismiss="modal" aria-hidden="true">×</button>
+                
+                <img id="modalimg" src="||imgdesk||" alt="" class="img-responsive"  style="margin: auto;" />
+				<h2 id="titboxv" style="margin:10px 0px;"></h2>
+				<a href="#" id="btndown" target="_blank" class="red-btn">DESCARGAR</a>
+                <ul id="descargaslinks_c_imagebox" class="listano"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="cp_videobox" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <div class="modal-content">
+            <div class="modal-body">
+				<button type="button" class="close " data-dismiss="modal" aria-hidden="true">×</button>
+				<div style="padding:60px 0px;">
+				<video id="videoplaybanco" class="video-js" preload="auto" style="margin: auto;">
+				  <source src="/static/descargas/bancoimg.mp4" type="video/mp4">
+				</video>
+				</div>
+
+				<h2 id="titboxvideo" style="margin:10px 0px;"></h2>
+				
+                <a href="#" id="btndown_video" target="_blank" class="red-btn">DESCARGAR</a>
+                <ul id="descargaslinks_cp_videobox" class="listano"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</section>
+{%endblock%}
+
+
+
+
+
+
+{% block extrajs %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/6.3.3/video.js"></script>     
+
+
+<script src="/static/js/camp_front_ctr.js"></script>     
+
+
+
+<script type="text/javascript">
+var options = {'controls':true,'autoplay':false,'fluid':true};
+var jsplayer = videojs('videoplaybanco', options);
+	function cambiale(fuente){
+		jsplayer.src({ type: "video/mp4", src:fuente});
+	};
+	$('#cp_videobox').on('show.bs.modal', function (e) {
+			jsplayer.play();
+	});
+	$('#cp_videobox').on('hide.bs.modal', function (e) {
+			jsplayer.pause();
+	});
+	var catstoshow = [];
+$(document).ready(function(){
+	$('.checat').click(function(){
+		var ang = angular.element($('#bancobox')).scope();
+		var pk = $(this).val();
+		if($(this).is(':checked')){
+			ang.cats.push(pk);
+		}
+		else{
+			inx = ang.cats.indexOf(pk);
+			ang.cats.splice(inx,1);
+		}
+		ang.page = 1;
+		ang.getpends();
+		ang.$apply();
+	});
+	$('.filtrotypo').click(function(){
+		$('.filtrotypo').addClass('redfont').removeClass('blackfont');
+		$(this).removeClass('redfont').addClass('blackfont');
+	});
+});
+
+$('#ordered').change(function(){
+	var ang = angular.element($('#bancobox')).scope();
+	var valor = $(this).val();
+	ang.orden = valor;
+		ang.getpends();
+		ang.$apply();
+});
+</script>
+{% endblock %}

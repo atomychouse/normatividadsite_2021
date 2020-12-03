@@ -1,0 +1,60 @@
+<input id="loader" name="imagen" type="file" style="display: none;">
+
+
+<div id="mainbox_home" ng-controller="homeCtr">
+
+<div class="add_box">
+<input type="text" name="columns" ng-model="columns" />
+<a href="#addRow" ng-click="addRow();$event.preventDefault();"><span class="lnr lnr-plus-circle"></span></a>
+</div>
+
+<ul id="main_box" ui-sortable="sortableOptions">
+  <li ng-repeat="item in rowsSec" data-module="||item.modul||" style="background-color:#fff;margin:2% 0%;">
+    || item.title ||
+       <div ng-include src="template"></div>
+    <ul class="menu" ng-init="template='view1'" ui-sortable="sortableOptions">
+     <li><button ng-click="template='view1'">view1</button></li>
+     <li><button ng-click="template='view2'">view2</button></li>
+    </ul>
+
+  </li>
+</ul>
+
+</div>
+
+<script id="view1" type="text/ng-template">
+      ||item.title||
+      <ul  class="row" ui-sortable="sortableOptions">
+        <li ng-repeat="n in item.nodeses" class="col-sm-||item.columnes|| col-md-||item.columnes||">
+
+            <div class="media">
+              <div class="media-left media-middle">
+                <a href="#">
+                  <img class="media-object " src="/static/imgs/foto.jpg" alt="as" style="height:120px">
+                </a>
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading">Middle aligned media</h4>
+                <pre>
+                t
+                t
+                t
+                t
+                t
+
+                t
+                </pre>
+              </div>
+            </div>
+
+        </li>
+      </ul>
+</script>
+
+
+
+<script id="view2" type="text/ng-template">
+nada
+</script>
+
+

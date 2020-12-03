@@ -1,0 +1,213 @@
+		<div class="seched">
+		<span>FILTRAR IMAGENES</span>
+		<a href="#" ng-click="$event.preventDefault();chowmenu=true;" ng-hide="chowmenu"> <span class="arrowmov lnr lnr-chevron-down"></span> </a>
+		<a href="#" ng-click="$event.preventDefault();chowmenu=false;" ng-show="chowmenu"> <span class="arrowmov lnr lnr-chevron-up"></span> </a>
+		<span class="limpio"></span>
+		</div>
+	
+	<div class="bancomenumovil"  ng-show="chowmenu" style="border:1px solid white;">
+		<ul class="catmenu_bancos">
+
+			{% for cat in cats %}
+			<li>
+				<h4 class="secnamebanco ng-binding">{{cat.catname}}</h4>
+				<ul class="catmenu_banco">
+					{% for scat in cat.cat_set.all%}
+					<li>
+						<div>
+
+							<div style="display: inline-block;vertical-align: top;">
+								<input type="checkbox" name="cat" value="{{scat.catslug}}" class="checat" />
+							</div>
+							<div  class="banco_txt">{{scat.catname}}</div>
+						</div>
+					</li>
+					{% endfor%}
+				</ul>
+
+			</li>
+			{% endfor %}
+		</ul>
+		
+	</div>
+
+<div style="display: table;width:100%;height:105%;margin-top:-25px;">
+	<div style="display: table-row;">
+
+	{% if cats %}
+	<div class="bancomenu">
+		<ul class="catmenu_banco">
+			{% for cat in cats %}
+			<li>
+				<h4 class="secnamebanco ng-binding">{{cat.catname}}</h4>
+				<ul class="catmenu_banco">
+					{% for scat in cat.cat_set.all%}
+					<li>
+						<div>
+
+							<div style="display: inline-block;vertical-align: top;">
+								<input type="checkbox" name="cat" value="{{scat.catslug}}" class="checat" />
+							</div>
+							<div  class="banco_txt">{{scat.catname}}</div>
+						</div>
+					</li>
+					{% endfor%}
+				</ul>
+
+			</li>
+			{% endfor %}
+		</ul>
+		
+	</div>
+	{% endif %}
+
+
+	<div style="display: table-cell;width:{% if cats %}80 {% else %} 100{% endif%} %;padding:20px 12px;margin:auto;" class="responsiverow">
+		
+		{% if rw.bancovideos %} <h1 style="padding-left:9px;">VIDEO</h1> {% endif %}
+		{% for box in rw.bancovideos %}
+
+		      	<div class="images bancoimages" data-cats="{{box.cats}}">
+		        		<a href="#" class="changefoto" data-toggle="modal" data-target="#videobox" 
+		        		 onclick="cambiale('/{{box.getvideos}}');">
+							<img  src="/{{box.recorte}}" 
+								  class=" img-responsive"   
+								  style="border: 0px;max-height:160px;margin: auto;">
+						</a>
+				<div class="hilegal" style="padding:12px 0px 0px 12px;">{% if box.titulo %} {{box.titulo}} {% endif%}</div>
+				<div style="display:none;" class="descrpv">{{box.texto}}</div>
+		        </div>
+		{% endfor %}
+
+		{% if rw.bancos %}<h1 style="padding:50px 0px 0px 9px;">IMAGEN</h1>{% endif %}
+
+		{% for box in rw.bancos %}
+
+
+
+		      <div class="images bancoimages" data-cats="{{box.cats}}">
+		        		<a href="#" class="changefoto" data-toggle="modal" data-target="#lightbox">
+							<img  src="/{{box.recorte}}" 
+								  data-dw="/{{box.webimage}}" 
+								  data-ext="{{box.selfimg}}" 
+								  data-src="/{{box.webimage}}"  
+								  class=" img-responsive"   
+								  style="border: 0px;max-height:160px;margin: auto;">
+						</a>
+						
+
+			<div class="hilegal" style="padding:12px 0px 0px 12px;">{% if box.titulo %} {{box.titulo}} {% endif%}</div>
+			<div style="display:none;" class="descrpv">{{box.texto}}</div>
+				    <div class="descargadas" style="display: none;">
+				    	{% for x in box.bancodwfile_set.all %}
+				    	<a href="/dw/?f={{x.descargar}}" target="_blank" class="red-btn">{{x.descarganame}}</a>
+				    	
+				    	{% endfor %}
+				    	<a href="/dw/?f={{box.original}}" target="_blank" class="red-btn">{{box.selfimg}}</a>
+
+				    </div>
+
+
+		        </div>
+
+
+
+		     
+		{% endfor %}
+
+		
+
+
+		
+		
+	</div>
+
+
+
+
+
+	</div>
+
+</div>
+
+
+
+
+<div id="lightbox" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <button type="button" class="close hidden" data-dismiss="modal" aria-hidden="true">×</button>
+        <div class="modal-content">
+            <div class="modal-body">
+            	<button type="button" class="close hidden" data-dismiss="modal" aria-hidden="true">×</button>
+                
+                <img id="modalimg" src="" alt="" class="img-responsive"  style="margin: auto;" />
+                
+                <div id="legalesx"></div>
+                
+		<div id="titboxv"></div>
+                <div id="descpv"></div>
+
+
+		<a href="#" id="btndown" target="_blank" class="red-btn" style="display: none;"></a>
+                <div id="descargaslinks" ></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="videobox" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <div class="modal-content">
+            <div class="modal-body">
+				<button type="button" class="close " data-dismiss="modal" aria-hidden="true">×</button>
+				<div style="padding:60px 0px;">
+				<video id="videoplaybanco" class="video-js" preload="auto" style="margin: auto;">
+				  <source src="/static/descargas/bancoimg.mp4" type="video/mp4">
+				</video>
+				</div>
+
+				<h2 id="titboxv" style="text-align:center;"></h2>
+				<div id="descpv"></div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% block extrajs %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/6.3.3/video.js"></script>     
+
+<script type="text/javascript">
+
+
+
+
+var options = {'controls':true,'autoplay':false,'fluid':true};
+
+var jsplayer = videojs('videoplaybanco', options);
+
+
+
+function cambiale(fuente){
+	jsplayer.src({ type: "video/mp4", src:fuente});
+	
+}
+
+
+
+
+
+</script>
+
+
+
+{% endblock %}

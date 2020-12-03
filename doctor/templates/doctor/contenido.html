@@ -1,0 +1,118 @@
+{# LA IMAGEN CROPING  #}
+
+<div id="cropimage" style="">
+    {% if section.webimage %}
+    <img src="{{section.webimage}}" />
+    {% endif %}
+</div>
+
+<input type="file" id="loadermainimage" style="display: none;" />
+
+
+<!--
+<img-crop image="sectionmainimage" image="||section.webimage||" 
+          area-type="rectangle" 
+          result-image-size="{w:1380,h:480}"  
+          result-image="section.webimage"></img-crop>
+
+<div class="row" style="position: relative;">
+    <div class="ok_l_box" style="position:absolute;width:10% !important;z-index:102;">
+      <a href="#links" class="vectorbtn" ng-click="addimagesection(this);">
+        <span class="lnr lnr-camera"></span>
+      </a>
+    </div>
+
+
+  <div class="col-md-12 col-xs-12">
+      <img ng-show="vi" ng-src="||section.webimage||"  class="img-thumbnail"  />
+      <img ng-hide="vi" ng-src="||section.webimage||"  class="img-responsive" />
+  </div>
+    <div class="ok_l_box" style="position:absolute;bottom:0px;width:10% !important;z-index:102;">
+      <a href="#links" class="vectorbtn" ng-click="addimagesection(this);">
+        <span class="lnr lnr-camera">save</span>
+      </a>
+    </div>
+
+
+</div>
+-->
+
+
+
+<div style="height:100px;">&nbsp;</div>
+{# PANEL PARA AGREGAR RENGLON #}
+
+
+<div>
+  <label for="ishome" style="color:#fff;">Es HomePage</label>
+  <input type="checkbox" name="ishome" value="true" {% if section.ishome %}checked="checked"{% endif %} id="ishome" />
+</div>
+
+
+
+
+
+
+<div class="add_box">
+
+  <a href="#addText" ng-click="genralmodule='spherenav';columns=1;addGrid($event,this);">
+    <span class="lnr lnr-plus-circle"></span>spherenav
+  </a>  
+
+
+  <a href="#addText" ng-click="genralmodule='htmltext';columns=1;addGrid($event,this);">
+    <span class="lnr lnr-plus-circle"></span>HTMLTXT
+  </a>  
+
+
+  <a href="#addText" ng-click="genralmodule='easysideimg';columns=1;addGrid($event,this);">
+    <span class="lnr lnr-plus-circle"></span>EasySideIMG
+  </a>  
+
+  <a href="#addText" ng-click="genralmodule='video';columns=1;addGrid($event,this);">
+    <span class="lnr lnr-plus-circle"></span>Video
+  </a>  
+
+  <a href="#addText" ng-click="genralmodule='blankrow';columns=1;addGrid($event,this);">
+    <span class="lnr lnr-plus-circle"></span>BlankRow
+  </a>  
+
+
+  <a href="#addText" ng-click="genralmodule='richtext';columns=1;addGrid($event,this);">
+    <span class="lnr lnr-plus-circle"></span>textoHTML
+  </a>  
+
+  <a href="#addDownload" ng-click="genralmodule='sideimg';columns=6;addGrid($event,this);">
+    <span class="lnr lnr-plus-circle"></span>Imagen Lateral
+  </a>  
+  <a href="#addRow" ng-click="genralmodule='gridLink';columns=3;addGrid($event,this);"><span class="lnr lnr-plus-circle"></span>Grid Links</a>  
+  <a href="#addRow" ng-click="genralmodule='gridImg';columns=3;addGrid($event,this);"><span class="lnr lnr-plus-circle"></span> Grid Imagenes</a>  
+  <a href="#addRow" ng-click="genralmodule='imglg';columns=1;addGrid($event,this);"><span class="lnr lnr-plus-circle"></span>Imagen Larga</a>
+</div>
+
+<!-- ROW FOR PAGE  -->
+<ul id="main_box" ng-sortable="rowsSec"   ui-sortable="sortableOptions">
+  
+  <li ng-repeat="item in rowsSec" data-pk="||item.pk||" class="sortable-element" data-module="||item.modul||" style="background-color:#999;margin:2% 0%;">
+    <div class="ok_box">
+        
+        <div style="float:left;">
+        <a href="#hiderowbox" ng-hide="item.showbox" ng-click="item.showbox=true;$event.preventDefault();">
+          <span class="lnr lnr-chevron-down"></span>
+        </a>
+        <a href="#hiderowbox" ng-show="item.showbox" ng-click="item.showbox=false;$event.preventDefault();">
+          <span class="lnr lnr-chevron-up"></span>
+        </a>
+        </div>
+        <h2 class="name_module">  ||item.name_module||</h2>
+        <div style="float:right;">
+        <a href="#links"  ng-click="slaye_row($event,this)">
+          <span class="lnr lnr-trash"></span>
+        </a>  
+        </div>
+        <div style="clear:both;height:0px;"></div>
+    </div>
+
+    <div ng-show="item.showbox" ng-init="template=item.module" ng-include src="template"></div>
+  </li>
+</ul>

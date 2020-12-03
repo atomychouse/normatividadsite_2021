@@ -1,0 +1,25 @@
+{% for box in rw.medias %}
+    <div class="col-sm-{{rw.configur}} col-md-{{rw.configur}} col-xs-12">
+    	<p><img  src="/{{box.webimage}}"  class="img-responsive" width="90%"></p>
+    	<p class="links-box-link">{{box.title}}</p>
+	    <div class="boxtext">{{box.texto|safe|linebreaksbr}}</div>
+        <div>
+        {% for lx in box.downloadsl%}
+        	{% if lx.type_link in 'link' %}
+
+
+        	
+                {% if 'static' in lx.dfile %}
+                <a class="red-btn" href="/dw/?f=/{{lx.dfile}}" target="_blank">{{lx.dtitle}}</a>
+                {% else %}
+                <a class="red-btn" href="/dw/?f=/static/{{lx.dfile}}" target="_blank">{{lx.dtitle}}</a>
+                {% endif %}                    
+    
+
+            {% else %}
+        		<a href="/dw/?f={{lx.dfile}}" target="_blank" class="red-btn">{{lx.dtitle}}</a>
+        	{% endif %}
+        {% endfor %}
+        </div>
+    </div>
+{% endfor %}

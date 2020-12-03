@@ -1,0 +1,13 @@
+
+
+
+ 		<li style="display: inline-block;width:30%;min-width:320px;margin:auto;"  ng-repeat="item in list">
+			<div class="thumbnail">
+				<a href="/section/||item.sec_slug||/">
+				<img src="||item.mobileimage||" width="100%" ng-if="item.mobileimage"/>
+				</a>
+					<div class="caption centre">
+						<h3>||item.title||</h3>
+					</div>
+			</div>
+		</li>

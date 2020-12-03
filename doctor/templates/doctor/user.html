@@ -1,0 +1,134 @@
+{% extends "admins/base.html" %}
+
+{% block extras%}
+<style type="text/css">
+	.row,label{
+		color:#fff !important;
+	}
+
+	#reg_box{
+		width:50%;margin:auto;
+	}
+
+	.helptext{
+		color:#999;
+	}
+
+
+
+</style>
+
+{% endblock%}
+
+{%block content%}
+
+<div ng-controller="userCtr">
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav menutool">
+        <li><a href="#configurador" ng-click="userprofile=true;perms=false;">
+        	Información de cuenta <span class="sr-only">(current)</span></a></li>
+        <li><a href="#mainbox_home" ng-click="userprofile=false;perms=true;">Permisos</a></li>
+        <li><a href="/admon/users/">Volver al listado</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+
+	<section id="users" ng-show="userprofile">
+		<div id="reg_box" class="round_box">
+		<form name="secure" action="/admon/singon/" method="post" class="senditer">
+			<input type="hidden" name="pk" value="{{pk}}">
+			{% csrf_token %}
+			<div>
+			{{forma.as_p}}
+			</div>
+			<div style="text-align: right;margin-top:2vmax;">
+				<button type="submit" class="vectorbtn"><span class="lnr lnr-checkmark-circle"></span></button>
+			</div>
+
+		</form>
+		</div>
+	</section>
+
+	<section id="permisos" ng-show="perms">
+
+    <div class="ok_l_box" style="text-align: right;">
+      <a href="#links" class="vectorbtn" ng-click="saveperms($event,this);">
+        <span class="lnr lnr-checkmark-circle"></span>
+      </a>
+    </div>
+
+		      
+          <ul id="main_box">
+            <li  ng-repeat="sec in list">
+                <h3 class="master" style="color:#fff;">
+ 				<input type="checkbox" name="sec" ng-click="checkallsec(sec);" />
+                ||sec.sec_name||</h3>
+              <ul  ng-if="sec.rows.length>0">
+                <li>
+                    <div class="row menurow" ng-repeat="row in sec.rows">
+                        <div class="col-xs-2 col-sm-2 col-md-2" ng-repeat="col in row.cols">
+                            <div class="secname">
+                            
+                            ||col.col_name||</div>
+                            <ul class="listmenu">
+                                <li ng-repeat="sec_col in col.sections">
+                                    <input type="checkbox" 
+                                    	   ng-checked="user_sections.indexOf(sec_col.pk) > -1"
+                                    	   value="sec_col.pk"
+                                    	   ng-click="toggleSelection(sec_col.pk);" />
+                                    ||sec_col.sec_name||
+                                </li>
+                            </ul>
+                            
+                        </div>
+                    </div>
+                </li>
+              </ul>
+
+            </li>
+          </ul>
+
+	</section>
+
+
+</div>
+
+{%endblock%}
+
+
+{% block extrajs %}
+
+<script type="text/javascript">
+  var userpk = '{{pk}}';
+  var csrf_token = '{{csrf_token}}';
+  var permisos = [];
+  {% for p in permisos %}
+    per = parseInt('{{p}}');
+    permisos.push(per);
+  {% endfor %}
+
+  $(document).ready(function(){
+  	$('[name="secure"]').submit(sendit);
+  });
+</script>
+<script src="/static/js/usercontrollers.js"></script>
+
+{% endblock %}
+
+

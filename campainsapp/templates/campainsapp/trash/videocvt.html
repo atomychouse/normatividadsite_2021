@@ -1,0 +1,107 @@
+{% extends "admins/base.html" %}
+
+
+
+{%block content%}
+<section class="container-fluid">
+
+	<h1 class="secnamet">Conversor de Videos</h1>
+  <hr/>
+
+	<div style="padding:0px 2%" >
+
+
+		<form action="{% url 'upvideos' %}"
+		      class="dropzone"
+		      id="my-awesome-dropzone" >
+		      <p class="dz-message">Agregar Archivos aquí</p>
+		      {% csrf_token %}
+		      <div class="dz-filename"><span data-dz-name></span></div>
+
+		</form>
+
+
+
+
+	</div>
+
+	<div class="row" style="margin-top:60px;">
+
+		<div class="col-md-6 col-sm-6 col-xs-1 col-xl-6">
+			{% for v in vnocvt %}<div>{{v.videof}} -- </div>{% endfor %}
+		</div>
+
+		
+		<div class="col-md-6 col-sm-6 col-xs-1 col-xl-6">
+			{% for v in vcvt %}
+				<div>
+		        		<a href="#" class="changefoto" data-toggle="modal" data-target="#videobox" 
+		        		 onclick="cambiale('{{v.getvideo}}');">
+							<img src="{{v.getimg}}" style="width:200px;" />
+						</a>
+
+					<p>{{v.getvideo}}</p>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+
+
+</section>
+
+
+
+<div id="videobox" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <div class="modal-content">
+            <div class="modal-body">
+				<button type="button" class="close " data-dismiss="modal" aria-hidden="true">×</button>
+				<div style="padding:60px 0px;">
+				<video id="videoplaybanco" class="video-js" preload="auto" style="width:40vw;height:40vh;margin: auto;">
+				  <source src="" type="video/mp4">
+				</video>
+				</div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+{% block extrajs %}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/6.3.3/video.js"></script>     
+
+<script type="text/javascript">
+
+
+
+
+var options = {'controls':true,'autoplay':false,'fluid':true};
+
+var jsplayer = videojs('videoplaybanco', options);
+
+
+
+function cambiale(fuente){
+	jsplayer.src({ type: "video/mp4", src:fuente});	
+}
+
+
+
+
+
+</script>
+
+
+
+{% endblock %}

@@ -1,0 +1,100 @@
+<br/><br/>
+
+<div class="container-fluid" style="padding:0px;margin: 0px;">
+
+
+  <div class="row">
+    <div class="col-md-||item.columns||  col-sm-||item.columns||" ng-repeat="box in item.nodeses" style="vertical-align: top;">
+      <div class="imgbox">
+          <div class="" style="position:absolute;width:10% !important;text-align: left;">
+              <a href="#links" class="vectorbtn ok_box_rojillo_camara" ng-click="changeme(this);micro=true;">
+                <span class="lnr lnr-camera"></span>
+              </a>
+          </div>
+          <div class="ok_box">
+            <a href="#links"  ng-click="slayed($event,this);">
+              x
+            </a>  
+          </div>
+          <div class="cropArea" ng-show="micro" style="position:absolute;left:12%;">
+            <img-crop image="myImage" image="||box.src||" area-type="square"  result-image="box.src"></img-crop>
+          </div>
+          <img ng-show="vi" ng-src="||box.src||"  class=" changeme img-responsive" alt="doctor" width="100%" >
+          <img ng-hide="vi" ng-src="||box.prevy||"  width="100%"  />
+
+      </div>
+      <div style="text-align: right;position: relative;bottom:32px;height: 0px;">
+        
+      </div>
+      <div class="formbox">
+        <div>
+          <input type="hidden" class="tinybox lb" ng-model="dl.type_link"   />
+          <input type="hidden" class="tinybox lb" ng-model="dl.sending"   />
+          <input type="text" name="link_box" ng-model="box.title" style="width: 100%;" class="lightinput"  />
+        </div>
+        <div><textarea ng-model="box.texto" class="lightinput" style="width: 100%;" rows="4" >||box.texto||</textarea> </div>
+        
+            <div style="text-align: right;" >
+              <a class="ok_box_rojillo" href="#as" ng-click="addDownloadcolumn($event,this,'link');">
+                <span class="lnr lnr-file-empty"></span>
+              </a>
+            </div> 
+      </div>
+      <div class="btnbox"  ng-repeat='dl in box.downlink' style="margin:10px 0px;">
+        
+        <table style="width:100%;text-align: left;">
+          <tr>
+            <td colspan="3">
+              <p style="padding:0px; ">
+              <input type="text" class="tinybox lb" style="width:100%;"
+               ng-model="dl.down_title" placeholder="TÍTULO" 
+               required="required" 
+                />  
+               </p>
+               <p style="padding:0px;margin-top:-10px;">
+              <input type="text" class="tinybox lb" ng-model="dl.down_file"
+               placeholder="archivo" required="required" ng-click="cambiale(this,dl);"
+               style="width:87.5%;" readonly="true" />
+               <a class="ga-sm ga6 lb" ng-click="cambiale(this,dl);" style="margin:0px -3px !important;padding:7px 12.5px;">+</a>
+              </p>  
+
+            </td>
+          </tr>
+          <tr>
+          <td colspan="3">
+
+            </td>
+          </tr>
+          <tr>
+            <td style="width:50%;">
+                <a href="#descarga" class="ga-sm ga6" style="width:100% !important;" ng-click="settypel($event,dl,'download');save_downloadlink($event,this,'grid');" ng-class="{'red' : dl.type_link=='download'}">Descarga</a>
+
+              </td>
+            <td>
+              <a href="#link" class="ga-sm ga6" style="width:100% !important;" ng-class="{'red' : dl.type_link=='link'}"  ng-click="settypel($event,dl,'link');save_downloadlink($event,this,'grid');">Link</a> 
+            </td>
+            <td style="text-align: right;">
+              <a href="#links" class="ga-sm ga6" style="width:90%" ng-click="remove_downloadlink($event,this,'grid');">x
+              </a>
+            </td>
+          </tr>
+        </table>        
+      </div>
+      
+
+    <div style="text-align: right;margin-top: 30px;">
+      <a href="#links" ng-click="save_link($event,this);micro=false;" class="ok_box_gris">
+      <img src="/static/imgs/check.png" />
+      </a>
+         <a href="#agregar" ng-if="$last" id="masbox" class="ok_box_rojillo lb" ng-click="addBox($event,this);">+</a> 
+
+    </div>
+
+
+
+
+    </div>
+
+  </div>
+</div>
+

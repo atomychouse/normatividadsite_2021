@@ -1,0 +1,15 @@
+@font-face {
+    font-family: "DINWeb";
+	src: url('/static/fonts/clarofonts/DINWeb.woff') format('woff'), 
+       	 url('/static/fonts/clarofonts/DINComp.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+    font-family: "DINWeb";
+	src:url('/static/fonts/clarofonts/DINComp.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
+

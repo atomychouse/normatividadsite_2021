@@ -1,0 +1,23 @@
+        <div style="width:90%;margin: auto;">
+
+        <div class="thumbnail" style="text-align:center;">
+            <div class="ok_l_box" style="position:absolute;width:10% !important;z-index:102;">
+              <a href="#links" class="vectorbtn" style="color:#000;" ng-click="changesecimg(this);micro=true;">
+                <span class="lnr lnr-camera"></span>
+              </a>
+            </div>
+              <div class="cropArea"  style="position:relative;left:12%;">
+
+                <img-crop image="myImage" image="||section.src||" area-type="rectangle" result-image-size="{w:1380,h:480}"  result-image="section.src"></img-crop>
+              </div>
+
+            <img  ng-src="||section.src||"   class=" changeme"  />
+            <img ng-hide="section.vi" ng-src="||section.webimage||"  />
+            
+            <div class="ok_box">
+              <a href="#links" ng-click="saveImg($event,section);"><span class="lnr lnr-checkmark-circle"></span></a>
+            </div>
+        </div>
+            
+            
+        </div>

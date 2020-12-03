@@ -1,0 +1,412 @@
+{% extends "doctor/base.html" %}
+
+{%block extras%}
+
+{%endblock%}
+
+{%block content%}
+
+
+
+<div id="configr" ng-controller="configCtr">
+
+<div class="jumbotron text-center">  
+<h1>{{section.sec_name}}</h1> 
+</div>
+	    <section id="forma" style="position:absolute;top:2%;right:2%;">
+	    	<div class="thumbnail" style="padding:9% !important;">
+		    	{% for ipu in forma%}
+		    	<p style="margin:12% 0%;">{{ipu}}</p>
+		    	{% endfor%}
+	            <div class="ok_box">
+	              <a href="#savesec" ng-click="changesec(section);$event.preventDefault();" ><span class="lnr lnr-checkmark-circle"></span></a>
+	            </div>
+	    	</div>
+	    </section>
+
+
+
+</div>
+
+
+<div ng-view></div>
+
+{%endblock%}
+
+
+
+{% block extrajs %}
+
+<script type="text/javascript">
+
+var links = [];
+
+jQuery(document).ready(function(){
+
+
+	
+		{% for l in ligas %}
+			links.push({pk:'{{l.pk}}',
+						'src':'/{{l.src}}',
+						'prevy':'/{{l.src}}',
+						'link':'{{l.link}}',
+            'columnax':'3',
+			});
+		{% endfor %}
+
+	$('#id_page_type').change(function(ar){
+		valuer = $(this).val();
+		if(valuer.length>1){
+			pathuri = '#'+valuer;
+			
+
+		}
+		else{
+			pathuri = '#/basic-example';
+		}
+
+		window.location=pathuri;
+
+	});
+
+
+});
+
+
+myapp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
+      $routeProvider
+        .when('/intern', {
+          controller: 'configCtr',
+          templateUrl: '/static/views/intern.html'
+        })
+        .when('/links', {
+          controller: 'configCtr',
+          templateUrl: '/static/views/links.html'
+        })
+        .when('/homepage', {
+          controller: 'homeCtr',
+          templateUrl: '/static/views/homepage.html'
+        })
+        .otherwise({
+          controller: 'configCtr',
+          templateUrl: '/static/views/{{section.page_type}}.html'
+   		});
+        
+
+      // testing issue #521
+      $compileProvider.debugInfoEnabled(false);
+    }]);
+
+
+
+
+sons = [
+		{% for s in section.section_set.all %}
+		{'sec_name':"{{s.sec_name}}"},
+		{% endfor %}
+		];
+
+
+
+
+myapp.controller('configCtr',function($scope,$http){
+
+ 	$scope.myImage='';
+    $scope.myCroppedImage='';
+    $scope.imageChanged = false;
+    $scope.sec_name = '{{section.sec_name}}';
+    $scope.page_type = '{{section.page_type}}';
+  	$scope.section = {'pk':'{{section.pk}}','sec_name':'{{section.sec_name}}','orden':'{{section.orden}}'};
+  	$scope.sons = sons;
+  	$scope.tochange = null;
+  	$scope.boxes = links;
+    $scope.imageCropResult = null;
+          $scope.showImageCropper = false;
+
+          $scope.$watch('imageCropResult', function(newVal) {
+            if (newVal) {
+              console.log('imageCropResult', newVal);
+            }
+            
+    });
+
+
+    $scope.changesec = function(elem){
+    	$scope.section.sec_name = $scope.sec_name;
+    	$scope.section.page_type = $scope.page_type;
+    	data = {};
+      data['pk']=$scope.section.pk;
+      data['sec_name']=$scope.sec_name;
+      data['page_type']=$scope.page_type;
+      data['orden']=$scope.section.orden;
+      data['csrfmiddlewaretoken']='{{csrf_token}}';
+      uris = "{% url 'addsection' %}";
+  		pardo = jQuery.postValues(uris,data);
+  		if(pardo.saved=='ok'){
+  			toastr('warning','El registro se actualizó');
+  			$scope.boxes.splice(elem,1);
+  		}
+  		else{
+  			toastr('warning','Algo salió mal :(');
+  		}
+
+
+    	/*
+		$scope.$apply(function($scope){
+              $scope.section.sec_name = 'blur';
+            });
+
+    	$scope.section.sec_name = 'sasdasdasd';
+    	data = $scope.section;
+    	console.log($scope.sec_name);
+    	toastr('success','La sección se modificó con éxito. :)');
+    	*/
+    }
+
+
+	$scope.addBox = function(elem){
+		columnax = jQuery('#amount').val();
+		$scope.boxes.unshift({'pk':'0','src':'/static/imgs/foto.jpg','columnax':columnax});
+	}
+
+	$scope.changeme = function(elem){
+		jQuery('#loader').click();
+		$scope.tochange = elem;
+		$scope.imageChanged = true;
+		//elem.box.src = 'reader.result';
+		
+	}
+
+
+	$scope.slayed = function(elem){
+    data = {};
+    if(elem.pk=='0'){
+      $scope.boxes.splice(elem,1);
+      return false;
+    }
+
+    data['pku']=elem.pk;
+    data['csrfmiddlewaretoken']='{{csrf_token}}';
+    uris = "{% url 'remover' %}";
+		pardo = jQuery.postValues(uris,data,'');
+    $scope.boxes.splice(elem,1);
+	}
+
+
+	$scope.crup=function(evt) {
+      var file=evt.currentTarget.files[0];
+      var reader = new FileReader();
+      reader.onload = function (evt) {
+        $scope.$apply(function($scope){
+        	//$scope.tochange.box.src = evt.target.result;
+          	$scope.tochange.myImage=evt.target.result;
+          	$scope.tochange.vi=true;
+        });
+      };
+      reader.readAsDataURL(file);
+    };
+
+
+	$scope.loadfoto=function(e){
+
+
+		var file    = e.currentTarget.files[0];
+    	var reader  = new FileReader();
+
+	    reader.onloadend = function (evtx) {
+			$scope.$apply(function($scope){
+              $scope.tochange.box.src = reader.result;
+            });
+	    }
+
+	    if (file) {
+	      reader.readAsDataURL(file);
+	    } 
+
+	}
+
+
+	$scope.save_link = function(elem){
+
+		urix = "{% url 'savior' %}";
+		data = {};
+		data['link'] = elem.box.link;
+		data['pkid']=elem.box.pk;
+
+		if($scope.imageChanged==true)
+			data['imagen']=elem.box.src.replace(/^data:image\/(png|jpeg);base64,/, "");;
+        
+        data['secpk']=elem.section.pk;
+        data['csrfmiddlewaretoken']='{{csrf_token}}';
+        data['step']=1;
+
+		pardo = jQuery.postValues(urix,data);
+		toastr('success','Se guardó con éxito');
+		$scope.imageChanged = false;
+		$scope.micro = false;
+
+	}
+
+		angular.element(jQuery('#loader')).on('change',function(e){
+			$scope.crup(e);
+		});
+
+
+
+
+
+});
+
+
+
+myapp.controller('homeCtr',function($scope,$http){
+
+
+  $scope.rowsSec = [];
+
+  $scope.addRow = function(elem){
+    console.log(elem);
+    nodes = $scope.columns;
+    
+    if(nodes<12 || nodes > 0)
+    	columnes = 12/nodes;
+    else
+    	columnes = 12;
+
+    item = {
+        'modul':'image',
+        'title':'new',
+        'nodeses':[],
+        'columnes':columnes.toFixed()
+    };
+
+    for(i=0;i<nodes;i++){
+    	item.nodeses.push({'cc':i});
+    }
+
+    $scope.rowsSec.push(item);
+
+    $scope.columns=0;
+
+  }
+
+
+  var tmpList = [];
+  
+  for (var i = 1; i <= 6; i++){
+    tmpList.push({
+      text: 'Item ' + i,
+      value: i
+    });
+  }
+  
+  $scope.list = tmpList;
+  
+  
+  $scope.sortingLog = [];
+  
+  $scope.sortableOptions = {
+    update: function(e, ui) {
+      var logEntry = tmpList.map(function(i){
+        return i.value;
+      }).join(', ');
+      $scope.sortingLog.push('Update: ' + logEntry);
+    },
+    stop: function(e, ui) {
+      // this callback has the changed model
+      var logEntry = tmpList.map(function(i){
+        return i.value;
+      }).join(', ');
+      $scope.sortingLog.push('Stop: ' + logEntry);
+    }
+  };
+
+
+});
+
+
+
+// PARA CONTROLAR EL MODULO DE IMAGEN 
+
+
+myapp.controller('imgCtr',function($scope,$http){
+
+	$scope.tochange=null;
+ 	$scope.imageCropResult = null;
+    $scope.showImageCropper = false;
+    $scope.$watch('imageCropResult', function(newVal) {
+            grved = true;
+            
+    });
+
+
+	$scope.changeme = function(elem){
+		console.log(elem);
+		return false;
+		jQuery('#loader').click();
+		$scope.tochange = elem;
+		$scope.imageChanged = true;
+		
+	}
+
+	$scope.slayed = function(elem){
+		$scope.boxes.splice(elem,1);
+		toastr('warning','El registro se eliminó');
+	}
+
+
+	$scope.crup=function(evt) {
+		console.log(evt);
+
+	 return false;
+      var file=evt.currentTarget.files[0];
+      var reader = new FileReader();
+      reader.onload = function (evt) {
+        $scope.$apply(function($scope){
+        	//$scope.tochange.box.src = evt.target.result;
+          	$scope.tochange.myImage=evt.target.result;
+          	$scope.tochange.vi=true;
+        });
+      };
+      reader.readAsDataURL(file);
+    
+    };
+
+
+
+
+	$scope.save_link = function(elem){
+
+		urix = "{% url 'savior' %}";
+		data = {};
+		data['link'] = elem.box.link;
+		data['pkid']=elem.box.pk;
+
+		if($scope.imageChanged==true)
+			data['imagen']=elem.box.src.replace(/^data:image\/(png|jpeg);base64,/, "");;
+        
+        data['secpk']=elem.section.pk;
+        data['csrfmiddlewaretoken']='{{csrf_token}}';
+        data['step']=1;
+
+		pardo = jQuery.postValues(urix,data);
+		toastr('success','Se guardó con éxito');
+		$scope.imageChanged = false;
+		$scope.micro = false;
+
+	}
+
+		angular.element(jQuery('#loader')).on('change',function(e){
+			$scope.crup(e);
+		});
+
+
+});
+
+
+
+
+
+</script>
+
+{% endblock %}

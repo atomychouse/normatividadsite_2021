@@ -1,0 +1,172 @@
+{% extends "admins/base.html" %}
+
+{% block extras%}
+<style type="text/css">
+
+	#reg_box{
+		width:50%;margin:auto;
+	}
+
+	.helptext{
+		color:#999;
+	}
+
+
+
+</style>
+
+{% endblock%}
+
+{%block content%}
+
+<div ng-controller="userCtr">
+
+
+<section class="container-fluid">
+
+<div style="padding:0px 2%" >
+	<h1>USUARIOS</h1>
+	<hr/>
+	<div class="lb mycol-2 titletable">
+		<span class="lb mycol-7">Grupos</span>
+
+	</div>
+	<div class="lb titletable" style="width: 79%;">
+		<div style="float: left;">Usuarios</div>
+		<div  style="float: right;margin-right:7px;padding-top: 4px;"> <a href="/admin/user/" class="ok_box_grey_left" style="color:#fff;">+</a> </div>
+		<div style="clear: both;height: 0px;width: 0px;overflow: hidden;">&nbsp;</div>
+	</div>
+
+	<div class="lb mycol-2" style="margin-right: 10px; ">
+
+
+		<div style="padding: 12px 5px;">PERMISOS</div>
+		{% for g in grupos %}
+		<div class="userslist">
+			<a href="/admin/grupo/{{g.pk}}/" style="color: #fff;padding-top: 12px;">{{g.name}}</a>
+		</div>
+		{% endfor %}
+
+		<div style="width: 100%;text-align:left;">
+			<a href="#/admin/grupo/" ng-hide="showgform" ng-click="showgform=true;"  class="addgrupo ok_box_red_btn"> + </a> 
+		 	<a href="#/admin/grupo/" ng-show="showgform" style="color: #fff;" ng-click="showgform=false;" class="addgrupo ok_box_red_btn"> - </a> 
+		</div>
+
+
+		<div ng-show="showgform" style="vertical-align: middle;">
+			<input  type="text" class="form-control" style="width:84% !important;float:left;padding:3px 10px;" name="grupo" placeholder="Nombre del Grupo"></input>
+			<a href="#links"  class="savegroup ok_box_grey_left" style="float:right;margin-top:13px;">
+        		+
+      		</a>
+      		<span style="clear: both;"></span>
+		</div>
+
+
+	</div>
+
+	<div class="lb" style="vertical-align: top;width: 77%;">
+	<br><br>
+	<section id="users" ng-show="userprofile">
+		<div id="" class="round_box">
+		<form name="secure" action="/admin/singon/" method="post" class="senditer">
+			<input type="hidden" name="pk" value="{{pk}}">
+			{% csrf_token %}
+			<div style="display: none;">
+			{{forma.as_p}}
+			</div>
+
+			<table style="width:100%;" class="trackuser">
+				<tr>
+					<td>
+						<div style=""><label>NOMBRE DE USUARIO</label></div>
+						<div>
+							{{forma.username}}
+						</div>
+					</td>
+					<td>
+						<div style="text-align: ;"><label>CONTRASEÑA</label></div>
+						<div>
+							{{forma.password}}
+						</div>
+						
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div style="text-align: ;"><label>NOMBRE COMPLETO</label></div>
+						<div>
+							{{forma.first_name}}
+						</div>
+						
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<div style=""><label>CORREO</label></div>
+						<div>
+							{{forma.email}}
+						</div>
+					</td>
+					<td>
+						<div style="text-align: ;"><label>PERMISOS</label></div>
+						<div>
+							{{forma.groups}}
+						</div>
+						
+					</td>
+				</tr>
+
+
+			</table>
+
+			<div style="text-align:left;margin-top:2vmax;margin-left:12px;">
+				<button type="submit" class="ok_btn_grey_left">Guardar</button>
+				<a href="/admin/users/" class="ok_btn_grey_left">Cancelar</a>
+			</div>
+
+		</form>
+		</div>
+	</section>
+
+
+
+	</div>
+	
+
+
+	</div>
+
+	</section>
+
+
+
+
+
+</div>
+
+{%endblock%}
+
+
+{% block extrajs %}
+
+<script type="text/javascript">
+  var userpk = '{{pk}}';
+  var csrf_token = '{{csrf_token}}';
+  var permisos = [];
+  {% for p in permisos %}
+    per = parseInt('{{p}}');
+    permisos.push(per);
+  {% endfor %}
+
+  console.log(permisos);
+  $(document).ready(function(){
+  	$('[name="secure"]').submit(sendit);
+  	$('#id_groups').removeAttr('multiple');
+  });
+</script>
+<script src="/static/js/usercontrollers.js"></script>
+
+{% endblock %}
+
+

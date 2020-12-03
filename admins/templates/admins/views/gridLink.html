@@ -1,0 +1,50 @@
+
+  
+  <section style="padding:10px 2%;">
+
+    <br/><br/>
+    <div class="row">
+      <div class="col-sm-||item.columns|| col-md-||item.columns|| varito" ng-repeat="box in item.nodeses" style="vertical-align: top;margin-bottom:72px;">
+        <div class="" style="text-align: center;">
+            <div class="" style="position:absolute;width:14% !important;padding:1px;">
+              <a href="#links" class="boton red" ng-click="changeme(this);micro=true;">
+                <span class="lnr lnr-camera"></span>
+              </a>
+            </div>
+              <div style="text-align: right;position: relative;height: 0px;">
+                <a href="#links" class="boton dgris"  ng-click="slayed_link($event,this);">
+                  x
+                </a>  
+              </div>
+              <div class="cropArea" ng-show="micro" style="position:absolute;left:12%;">
+                <img-crop image="myImage" image="||box.src||" area-type="square"  result-image="box.src"></img-crop>
+              </div>
+            <img ng-show="vi" ng-src="||box.src||" ng-click="changeme(this);micro=true;" class=" changeme img-responsive" alt="doctor" width="100%" >
+            <img ng-hide="vi" ng-src="||box.prevy||" class="changeme"  width="100%" ng-click="changeme(this);micro=true;" />
+
+            <div class="link_box_admin">
+              <input type="text" name="link_title" ng-model="box.title" style="width: 100%;" class="lightinput" ng-blur="save_gridlink($event,this);micro=false;"  />              
+            </div>
+
+            <div class="link_box_admin">
+              <input type="text" name="link_liga" ng-model="box.link" style="width: 100%;" class="lightinput" ng-blur="save_gridlink($event,this);micro=false;" />              
+            </div>
+
+         
+
+            <div style="text-align: right;margin-top: 30px;">
+              <a href="#links" ng-click="save_gridlink($event,this);micro=false;" class="boton dgris" style="line-height: 2.1 !important;">
+              <img src="/static/imgs/check.png" />
+              </a>
+              <a href="#agregar" id="masbox" ng-if="$last" class="boton red" ng-click="addBox($event,this);" style="line-height: 2.1 !important;">
+                +
+              </a>  
+            </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+

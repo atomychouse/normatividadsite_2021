@@ -1,0 +1,124 @@
+{% extends "admins/base.html" %}
+
+
+
+{%block content%}
+
+<div ng-controller="userCtr">
+
+
+  <h1 class="secnamet">{{grupo.name}}</h1>
+  <div class="ok_box" style="top:26px !important;">
+  <a href="#killem" ng-click="killem($event,'{{section.pk}}',1);"> x </a>
+  </div>
+  <hr/>
+
+  <table style="width:100%;" cellspacing="10">
+  <tr>
+    <th style="width:20%;" class="titulogris">
+      <div class="">Grupos</div>      
+    </th>
+    <th style="width:80%;" class="titulogris">
+      <div style="float: left;width:80%;">{{grupo.name}}</div>
+      <div style="float: right;text-align:right;">
+          <a href="#as" ng-click="checkallofall($event,list);">Seleccionar todos</a>
+      </div>
+      <div style="clear: both;height: 0px;">&nbsp;</div>
+    </th>
+
+  </tr>
+
+  <tr>
+    <td style="vertical-align: top;">
+          <div style="padding: 12px 5px;">PERMISOS</div>
+    {% for g in grupos %}
+    <div class="userslist">
+      <a href="/admin/grupo/{{g.pk}}/" style="color: #fff;padding-top: 12px;">{{g.name}}</a>
+    </div>
+    {% endfor %}
+
+
+    </td>
+    <td style="vertical-align: top;">
+      
+  <section id="permisos">
+          <ul id="main_box">
+            <li  ng-repeat="sec in list" class="lb" style="width:100%;">
+                <table style="width: 100%;">
+                  <tr>
+                    <td style="width:70%;">
+                      <h3 class="master" >
+                      <input type="checkbox" ng-click="adding(sec.pk);" name="sec" ng-checked="user_sections.indexOf(sec.pk) > -1" />
+                      ||sec.sec_name||
+                      </h3>
+                    </td>
+                    <td style="text-align: right;padding-right:10px;">  
+                      <a href="#all" ng-click="checkallsec($event,sec);">Seleccionar todos</a>
+                    </td>
+                  </tr>
+                </table>
+
+              <ul  ng-if="sec.cols.length>0">
+                <li>
+                        <div class=" col-sm-4 col-md-4" ng-repeat="col in sec.cols">
+                            <div class="secname">||col.col_name||</div>
+                            <ul class="listmenu">
+                                <li ng-repeat="sec_col in col.secs">
+                                    <input type="checkbox" 
+                                         ng-checked="user_sections.indexOf(sec_col.pk) > -1"
+                                         value="sec_col.pk"
+                                         ng-click="toggleSelection(sec_col.pk);" />
+                                    ||sec_col.sec_name||
+                                </li>
+                            </ul>
+                            
+                        </div>
+                    
+                </li>
+              </ul>
+
+            </li>
+          </ul>
+
+      <div style="text-align:left;margin-top:2vmax;margin-left:12px;">
+        <button type="button" class="ok_btn_grey_left" ng-click="saveperms($event,this);">Guardar</button>
+        <a href="/admin/users/" class="ok_btn_grey_left">Cancelar</a>
+      </div>
+
+  </section>
+
+    </td>
+
+
+  </tr>
+
+
+  </table>
+
+
+
+
+
+
+</div>
+{% endblock %}
+
+{% block extrajs %}
+
+<script type="text/javascript">
+  var gpk = '{{grupo.pk}}';
+  var csrf_token = '{{csrf_token}}';
+  var permisos = [];
+  {% for p in permisos %}
+    per = parseInt('{{p}}');
+    permisos.push(per);
+  {% endfor %}
+
+  $(document).ready(function(){
+  	$('[name="secure"]').submit(sendit);
+  });
+</script>
+<script src="/static/js/usercontrollers.js"></script>
+
+{% endblock %}
+

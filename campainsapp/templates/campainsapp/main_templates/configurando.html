@@ -1,0 +1,329 @@
+{% extends "campainsapp/base.html" %}
+
+{%block content%}
+
+<section ng-controller="campsCtr" id="controlador" >
+      <div id="toastrtos" class="warning" ng-show="pendientes>0">
+        <div class="lb indicator"><span class="lnr lnr-checkmark-circle"></span></div>
+        <div class="lb msg" style="padding: 20px 0px;">
+          ALGUNOS ARCHIVOS SE ESTÃN PROCESANDO, POR FAVOR ESPERE.
+          PENDIENTES POR CONVERTIR: <b>||pendientes||</b>
+        </div>
+      </div>
+
+
+<h2 class="titlebox_campains">PORTAFOLIO DE CAMPAÃAS</h2>
+<div>
+  
+  <section style="padding:40px; ">
+  	<form action="{% url 'upfiles' %}"
+        class="dropzone"
+        id="my-awesome-dropzone" style="height:100%;">
+        <div class="dz-message">
+          <p><span class="lnr lnr-exit-up" style="font-size: 3rem;"></span></p>
+          <p>Arrastra aquÃ­ o da click para subir los archivos que deseas publicar</p>
+        </div>
+        <input type="hidden" name="pais" id="pais">
+        <input type="hidden" name="producto" id="producto">
+        <input type="hidden" name="temporalidad" id="temporalidad">
+        <input type="hidden" name="anyo" id="anyo">
+        {% csrf_token %}
+        <div class="dz-filename"><span data-dz-name></span></div>
+    </form>
+  </section>
+  <div class="c_uploadbox">
+    <div style="float: left;">
+      <h4>ARCHIVOS CARGADOS</h4>
+      <div class="clicable" ng-click="getpends();">RECARGAR LISTADO</div>
+    </div>
+    <div style="float: right;">
+      <span ng-click="checartodos();" class="clicable">Seleccionar todos</span> &nbsp; |&nbsp; 
+      <span id="formsend" class="clicable">Editar en grupo</span> &nbsp; | &nbsp;
+      <span id="borradorgroup" class="clicable" rm-grupo>Borrar</span>
+    </div>
+    <div class="cleaner_float">&nbsp;</div>
+  </div>
+
+<form id="formagrupo" action="/campains/editgroup/" method="post" >
+  {% csrf_token %}
+  <input type="hidden" name="keyg[]" value="||x||" ng-repeat="x in grupoedicion">
+
+</form>
+
+
+<form id="rmgrupo" action="/campains/rmgroup/" method="post" >
+  {% csrf_token %}
+  <input type="hidden" name="keyg[]" value="||x||" ng-repeat="x in grupoedicion">
+
+</form>
+
+  <section id="bancogrid" style="width:100%;" class="container-fluid">
+    <div class="row">
+      <div class="col-xs-6 col-sm-3 col-lg-3 col-md-3" ng-repeat="r in readys track by $index" style="margin:10px 0px;">
+
+        <div class="c_imagebox" style="background: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0),rgba(0, 0, 0,0.9)),url('/||r.original||');background-size:cover;">
+          &nbsp;
+            <div class="image_top_bar">
+              <div class="left_top_bar upers infofile">
+                ||r.info|| | ||r.typefile||
+              </div>
+              <div class="clicable rmbox" ng-click="delsingle(r.pk);">x</div>
+              <div style="clear: both;height: 0px;">&nbsp;</div>
+            </div>
+            <div class="edtbar">
+              <div class="left_top_bar">
+                &nbsp;
+              </div>
+              <div style="float:right;padding:5px 7px 0px 6px;background-color:#B60000;">
+                <span  ng-click="edtopen(r.pk);" class="lnr lnr-pencil clicable" data-toggle="modal" data-target="#lightbox"></span>
+              </div>
+              <div style="clear: both;height: 0px;">&nbsp;</div>
+            </div>
+            <div class="bottom_box">
+              <div style="text-align: right;padding:5px;background-color:rgba(0,0,0,0.50);background-blend-mode:multiply;color:#fff;" ng-show="username=='santamarca'">
+                <span>Destacado</span>
+                <input type="checkbox" name="destaca[]" value="||r.pk||" ng-checked='r.destacado' destaca-me>
+              </div>
+              <div class="left_top_bar">
+                <span ng-click="edtopen(r.pk);" class="clicable" data-toggle="modal" data-target="#lightbox" style="color:#fff;text-decoration:underline;">click para editar</span>
+              </div>
+              <div class="wboxchbx">
+                <span style="padding:1px 2px;">Seleccionar</span>
+                <input type="checkbox" name="selecciona[]" value="||r.pk||" class="checkar" chec-grupo>
+              </div>
+              <div style="clear: both;height: 0px;">&nbsp;</div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+        <div style="text-align:right;padding:20px;">
+          <button type="button" class="btn btn-primary" ng-click="saveall()">GUARDAR Y PUBLICAR</button>
+        </div>
+</div>
+
+<div id="lightbox" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Editar archivo</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="editandobox">
+
+          <form action="{% url 'adjuntos' %}"
+              class="dropzone"
+              id="my-awesome-dropzone-two" style="height:100%;margin: 20px auto;">
+              <div class="dz-message">
+                <p><span class="lnr lnr-exit-up" style="font-size: 3rem;"></span></p>
+                <p>Arrastra aquÃ­ o da click para subir los archivos que deseas publicar</p>
+              </div>
+              <input type="hidden" name="campk" value="||editando.pk||">
+              {% csrf_token %}
+              <div class="dz-filename"><span data-dz-name></span></div>
+          </form>
+
+
+
+
+          <form name="editando" id="editandoform" method="post" action="/">
+            <input type="hidden" name="pk" value="||editando.pk||">
+            <div class="col-md-6 col-xl-6 col-sm-6" style="vertical-align: top;">
+              <img src="/||editando.mini||" style="width: 100%;" ng-show="showimg();">
+                      
+              <div>        
+                <video id="videoplaybanco" ng-show="showvideo();" class="video-js" preload="auto" style="margin: auto;width:250px;">
+                  <source src="/static/descargas/bancoimg.mp4" type="video/mp4">
+                </video>
+              </div>
+              <ul>
+                <li ng-repeat="at in editando.atachs" style="padding:10px;border-bottom: 1px dotted black;">
+                  <span>||at.name||</span>
+                </li>
+
+              </ul>
+
+	      	<div style="padding-top:30px;">
+			<label>Status</label>
+			<select name="statuscamp" ng-model="editando.statuscamp"  class="form-control alto">
+				<option value="status_activado" ||||>Activa</option>
+				<option value="status_pasada">Pasada</option>
+			</select>              
+              	</div>
+	      	<div>
+			<label>Mes</label>
+
+			 <select id="mes_display" 
+				name="mes_display" class="form-control alto" 
+				ng-model="editando.mes_display" 
+				ng-options="i.num as i.mes for i in meses">
+    			</select>
+		</div>
+		<div>
+			<label>Año</label>
+
+			<select id="anyo_display" 
+                                name="anyo_display" class="form-control alto" 
+                                ng-model="editando.anyo_display" 
+                                ng-options="i as i for i in years">
+                        </select>
+
+		</div>
+
+
+            </div>
+            <div class="col-md-5 col-xl-5 col-sm-5" style="width: 48%;">
+                <div>
+                    <div>
+                      <label>Titulo de imagen</label>
+                      <input type="text" name="titulo_imagen" class="form-control" ng-model="editando.titulo">
+                    </div>
+
+                      <div ng-repeat="c in cats">
+                        <label>||c.name||</label>
+              
+                        <select id="cat_by_||c.pk||" name="cats[]" class="form-control alto catcat">
+                          <option value="||sc.pk||" ng-repeat="sc in c.subcats">||sc.name||</option>
+                        </select>
+                      </div>
+
+                </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <div style="float: left;padding-top:10px;">
+        <span style="cursor: pointer;" ng-click="beforeit();">ANTERIOR</span> &nbsp;|&nbsp;
+        <span style="cursor: pointer;" ng-click="nextit();">SIGUIENTE</span>
+        </div>
+        
+        <div style="float: right;margin-right: 17px;">
+          <button type="button" class="btn btn-primary" ng-click="savesingle()">GUARDAR Y CERRAR</button>
+        </div>
+
+        <div style="height: 0px;clear: both;width: 0px;">&nbsp;</div>
+
+
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+</section>
+{% endblock%}
+
+
+
+{% block extrajs %}
+<script type="text/javascript">
+
+
+var autorecarga = null;
+var page = 1;
+var pendinetes=0;
+
+$(document).ready(function(){
+
+
+
+  $('#formsend').click(function(){
+
+
+  if($('[name="keyg[]"]').length>0){
+    $('#formagrupo').submit();
+  }
+  else{
+    alert('Seleccione los elemenots de la lista');
+  }
+  
+
+  });
+
+  $('#rmgrupo').submit(function(e){
+      e.preventDefault();
+      
+      url = $(this).attr('action');
+      data = $(this).serializeArray();
+      $.ajax({url:url,type:'post',data:data,
+        success:function(response){
+          console.log(response);
+        }
+      });
+
+    
+  });
+
+	var filesadds = 0;
+	$('#adds').text(filesadds);
+
+  Dropzone.options.myAwesomeDropzone = {
+	    addRemoveLinks:false,
+	    maxFilesize: 800, // MB
+	    clickable:true,
+	    
+	    accept: function(file, done) {
+	      done();
+	    },
+	    init: function () {
+	        var myDropzone = this;
+
+	      },
+	    removedfile:function(elemento){
+
+	      var elemento = elemento;
+	    },
+      queuecomplete:function(file){
+       
+        $.get( "{% url 'runcomand' %}", function( data ) {
+          
+          dnedon = null;
+        });
+          this.removeAllFiles();
+           
+          $('.dz-complete').hide(400);
+          controlador = $('#controlador');
+          contro = angular.element(controlador);
+          controlador.scope().getpends();
+          autorecarga = true;
+      }
+	  };
+
+
+
+     
+
+});
+
+
+setInterval(function(){ 
+  
+  if(autorecarga){
+    controlador = $('#controlador');
+    contro = angular.element(controlador);
+    if(controlador.scope().pendientes>0)
+      controlador.scope().getpends();
+  }
+ }, 3000);
+
+
+
+
+
+  $('#lightbox').on('hide.bs.modal', function (e) {
+      jsplayer.pause();
+  });
+
+
+
+
+
+
+
+</script>
+
+{% endblock %}

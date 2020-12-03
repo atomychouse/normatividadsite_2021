@@ -1,0 +1,22 @@
+<div style="margin:20px 0px; ">
+
+
+{% for ex in rw.externo_set.all %}
+
+	{% if 'text/css'  in ex.typofile %}
+        <link href="/{{ex.archivomain.url}}" rel="stylesheet">
+	{% endif %}
+	{% if 'text/html'  in ex.typofile %}
+		<div ng-include="'/{{ex.archivomain.url}}'"></div>
+	{% endif %}
+	{% if 'application/javascript'  in ex.typofile %}
+         <script src="/{{ex.archivomain.url}}"></script>
+
+	{% endif %}
+
+
+
+
+{% endfor %}
+
+</div>

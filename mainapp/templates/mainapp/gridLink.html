@@ -1,0 +1,13 @@
+{% for box in rw.ligas %}      
+      <div class="col-xs-12  col-sm-{{rw.configur}} col-md-{{rw.configur}}">
+      		  <div>
+              <a href="{{box.link}}">
+                 <img  src="/{{box.imagen}}"  class="img-responsive"  width="100%" >
+          	  </a>
+	          </div>
+            <p>
+		          <a class="links-box-link" href="{{box.link}}" class="generaltitle_link">{{box.title}}</a>
+            </p>		        
+        </div>
+{% endfor %}		
+</div>
