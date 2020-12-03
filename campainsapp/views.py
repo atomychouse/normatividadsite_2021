@@ -153,13 +153,16 @@ class getPendings(View):
 
                 try:
                     itemfile = r.campanyafile_set.all().first().itemfile.url
+                    infoitem = r.original.size/1000
                 except:
                     itemfile = ''
+                    infoitem = 0
+
                 item = {
                     'pk':r.pk,
                     'original':itemfile,
                     'destacado':r.destacado,
-                    'info':'%s Kb'%(r.original.size/1000),
+                    'info':'%s Kb'%(infoitem),
                     'titulo':r.titulo,
                     'atachs':r.myattachs(),
                     'typefile':r.typofile.upper().replace('/',' | '),
@@ -168,7 +171,7 @@ class getPendings(View):
 
             else:
 
-		try: 
+                try: 
                     infoitem = r.original.size/1000
                 except:
                     infoitem = 0

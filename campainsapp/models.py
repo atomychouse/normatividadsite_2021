@@ -48,7 +48,10 @@ class Campanya(models.Model):
 
 
 	def fileinfo(self):
-		info = '%s Kb'%(self.original.size/1000)
+		try:
+			info = '%s Kb'%(self.original.size/1000)
+		except:
+			info = '0 kb'
 		typofile = self.typofile.upper().replace('/',' | ')
 		return '%s %s'%(info,typofile)
 
