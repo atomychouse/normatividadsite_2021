@@ -1,27 +1,14 @@
 @charset "UTF-8";
-
-
-
 @font-face {
-    font-family: "DINWeb";
-
-	src:url('/static/fonts/clarofonts/DINWeb.eot');
-	src:url('/static/fonts/clarofonts/DINWeb.eot?#iefixw118d') format('embedded-opentype'),
-		url('/static/fonts/clarofonts/DINComp.ttf') format('truetype'),
-		url('/static/fonts/clarofonts/DINWeb.woff') format('woff');
-
-	font-weight: normal;
-	font-style: normal;
+    font-family: "AMX";
+    src: url('/static/fonts/clarofonts/AMX-Regular.woff') format('woff'), url('/static/fonts/clarofonts/AMX-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: "DINWebBold";
-
-	src:url('/static/fonts/clarofonts/DINComp-Bold.eot');
-	src:url('/static/fonts/clarofonts/DINComp-Bold.eot?#iefixw118d') format('embedded-opentype'),
-		url('/static/fonts/clarofonts/DINComp-Bold.ttf') format('truetype'),
-		url('/static/fonts/clarofonts/DINComp-Bold.woff') format('woff');
-	font-style: normal;
-	font-weight:bold;
+    font-family: "AMXBold";
+    src: url('/static/fonts/clarofonts/AMX-Bold.woff') format('woff'), url('/static/fonts/clarofonts/AMX-Bold.ttf') format('truetype');
+    font-style: normal;
+    font-weight: bold;
 }
-

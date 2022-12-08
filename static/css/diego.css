@@ -1,5 +1,8 @@
 /********* TEMPORALES */
+
+
 /***********************/
+
 
 /* ESCONDER MENUS A ADMINS  
 
@@ -10,13 +13,17 @@ ul.navbar-nav>li:nth-child(1n+8) {
 
 
 /* ESCONDER MENUS ORIGINALES EN DEMO  */
+
+
 /*
 ul.navbar-nav>li:nth-child(-n+8) {
     display: none;
 }
 */
 
+
 /* AJUSTES MENU CLAU */
+
 
 /*
 
@@ -100,41 +107,42 @@ ul.navbar-nav li.dropdown:nth-child(5) .grid-demo div .listmenu li:nth-child(2) 
 
 */
 
-/***********************/
-/* TEMPORALES *********************/
 
+/***********************/
+
+
+/* TEMPORALES *********************/
 
 
 /* AJUSTES VISUALES */
 
-
 .red-btn,
 .red-btn:visited,
-.red-btn:focus
-{
-    background-color:#ba2b1e;color:#fff;
-    font-size:1vmax;display:inline-block;
-    width:auto;padding:10px;
-    font-family: "DINWebBold",sans-serif;
+.red-btn:focus {
+    background-color: #ba2b1e;
+    color: #fff;
+    font-size: 1vmax;
+    display: inline-block;
+    width: auto;
+    padding: 10px;
+    font-family: "AMXBold", sans-serif;
     font-weight: bold;
-     margin-top: 30px;
+    margin-top: 30px;
 }
 
-
-
-.red-btn:hover{
-    text-decoration:none;
-    background-color:;color:#fff;
-    display:inline-block;
-    width:auto;padding:10px;
-    font-family: "DINWebBold",sans-serif;
+.red-btn:hover {
+    text-decoration: none;
+    background-color: ;
+    color: #fff;
+    display: inline-block;
+    width: auto;
+    padding: 10px;
+    font-family: "AMXBold", sans-serif;
     font-weight: bold;
 }
 
-
-
-
-.red-btn, .grey-btn {
+.red-btn,
+.grey-btn {
     font-size: 2vmin;
 }
 
