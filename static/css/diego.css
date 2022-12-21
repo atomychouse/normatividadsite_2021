@@ -121,29 +121,28 @@ ul.navbar-nav li.dropdown:nth-child(5) .grid-demo div .listmenu li:nth-child(2) 
 .red-btn:focus {
     background-color: #ba2b1e;
     color: #fff;
-    font-size: 1vmax;
+    font-size: 1.5rem;
     display: inline-block;
     width: auto;
-    padding: 10px;
-    font-family: "AMXBold", sans-serif;
-    font-weight: bold;
+    padding: 12px 12px 8px 12px !important;
+    font-family: "AMX", sans-serif;
     margin-top: 30px;
+    line-height: 1.5rem;
 }
 
 .red-btn:hover {
     text-decoration: none;
-    background-color: ;
     color: #fff;
     display: inline-block;
     width: auto;
-    padding: 10px;
-    font-family: "AMXBold", sans-serif;
-    font-weight: bold;
+    padding: 12px 12px 8px 12px !important;
+    font-family: "AMX", sans-serif;
+    line-height: 1.5rem;
 }
 
 .red-btn,
 .grey-btn {
-    font-size: 2vmin;
+    font-size: 1.5rem;
 }
 
 .links-box-link {

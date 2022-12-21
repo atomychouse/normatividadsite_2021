@@ -474,13 +474,13 @@
     .red-btn:hover {
         background-color: #ba2b1e;
         color: #fff !important;
-        font-size: 2vmin !important;
+        font-size: 1.5rem !important;
         display: inline-block;
         width: auto;
-        padding: 10px;
-        font-family: "AMXBold", sans-serif;
-        font-weight: bold;
+        padding: 12px 12px 8px 12px !important;
+        font-family: "AMX", sans-serif;
         margin-top: 30px;
+        line-height: 1.5rem;
     }
     .headbox {
         width: 100%;
@@ -648,13 +648,13 @@
     .red-btn:focus {
         background-color: #ba2b1e;
         color: #fff;
-        font-size: 17px;
+        font-size: 1.5rem;
         display: inline-block;
         width: auto;
-        padding: 10px;
-        font-family: "AMXBold", sans-serif;
-        font-weight: bold;
+        padding: 12px 12px 8px 12px !important;
+        font-family: "AMX", sans-serif;
         margin-top: 30px;
+        line-height: 1.5rem;
     }
     .grey-btn {
         background-color: #ADAFAF;
